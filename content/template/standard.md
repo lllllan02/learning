@@ -5,4 +5,5 @@ tags:
 aliases:
 cssclasses:
 date:
+order:
 ---
