@@ -209,7 +209,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const numLinks = graphData.links.filter(
       (l) => l.source.id === d.id || l.target.id === d.id,
     ).length
-    return 2 + Math.sqrt(numLinks)
+    return 6 + Math.sqrt(numLinks) // 从 2 调大到 6，让“点”显著变大
   }
 
   let hoveredNodeId: string | null = null
@@ -378,8 +378,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       interactive: false,
       eventMode: "none",
       text: n.text,
-      alpha: 0,
-      anchor: { x: 0.5, y: 1.2 },
+      alpha: 1,
+      anchor: { x: 0.5, y: 2.2 }, // 进一步增加到 2.2，确保字和较大的点之间有明显的空隙
       style: {
         fontSize: fontSize * 15,
         fill: computedStyleMap["--dark"],
@@ -511,7 +511,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
           // zoom adjusts opacity of labels too
           const scale = transform.k * opacityScale
-          let scaleOpacity = Math.max((scale - 1) / 3.75, 0)
+          let scaleOpacity = Math.max(scale - 1, 0)
           const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
 
           for (const label of labelsContainer.children) {
