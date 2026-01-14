@@ -27,7 +27,7 @@ tags:
 ```
 
 **替换为以下代码：**
-```typescript
+```typescript {6}
   /**
    * 核心逻辑修改：智能判断文件夹是否有 index.md
    * 只有当文件夹确实有关联的 markdown 数据时，才渲染为 <a> 链接
@@ -42,7 +42,7 @@ tags:
 修改 `setupExplorer` 函数（约 249 行）。我们需要移除原有的 `if` 条件包裹。
 
 **查找原代码位置：**
-```typescript
+```typescript {1-2,10}
     // Set up folder click handlers
     if (opts.folderClickBehavior === "collapse") {
       const folderButtons = explorer.getElementsByClassName(
