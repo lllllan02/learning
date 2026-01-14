@@ -6,6 +6,7 @@ tags:
   - 标注
 aliases:
   - Callouts
+date: 2026-01-14
 ---
 
 标注（Callouts）是 Obsidian 提供的一种特殊的块引用语法，用于创建具有视觉样式的提示信息、警告、笔记等。

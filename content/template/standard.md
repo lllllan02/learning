@@ -4,4 +4,5 @@ draft: true
 tags:
 aliases:
 cssclasses:
+date:
 ---

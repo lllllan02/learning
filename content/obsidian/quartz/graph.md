@@ -7,6 +7,7 @@ tags:
   - 图谱
 aliases:
 cssclasses:
+date: 2026-01-14
 ---
 本文记录了为了让 Quartz 图谱效果更接近 Obsidian 风格所做的调整，包括对 `quartz.layout.ts` 配置的详细中文说明。
 
