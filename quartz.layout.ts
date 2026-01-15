@@ -1,38 +1,6 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 
-// 图谱配置：定义本地图谱和全局图谱的交互与视觉样式
-const graphConfig = {
-  localGraph: {
-    drag: true, // 是否允许拖拽节点
-    zoom: true, // 是否允许缩放
-    depth: 1, // 本地图谱显示的链接深度
-    scale: 1.1, // 初始缩放比例
-    repelForce: 0.9, // 节点间的斥力系数
-    centerForce: 0.3, // 节点向中心的向心力系数
-    linkDistance: 60, // 链接的默认距离
-    fontSize: 0.8, // 标签字体大小
-    opacityScale: 8, // 节点透明度缩放系数
-    showTags: true, // 是否显示标签节点
-    removeTags: [], // 要在图谱中隐藏的标签
-    enableRadial: true, // 是否启用径向布局
-  },
-  globalGraph: {
-    drag: true, // 是否允许拖拽节点
-    zoom: true, // 是否允许缩放
-    depth: -1, // 全局图谱显示所有深度的链接
-    scale: 0.9, // 初始缩放比例
-    repelForce: 0.9, // 节点间的斥力系数
-    centerForce: 0.3, // 节点向中心的向心力系数
-    linkDistance: 60, // 链接的默认距离
-    fontSize: 0.8, // 标签字体大小
-    opacityScale: 8, // 节点透明度缩放系数
-    showTags: true, // 是否显示标签节点
-    removeTags: [], // 要在图谱中隐藏的标签
-    enableRadial: true, // 是否启用径向布局
-  },
-}
-
 // 共享页面组件：定义在所有页面类型（内容页、列表页等）中都通用的组件
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(), // 页面 <head> 标签中的元数据
@@ -73,7 +41,7 @@ export const defaultContentPageLayout: PageLayout = {
   ],
   right: [
     // 页面右侧栏组件
-    Component.CustomGraph(graphConfig), // 交互式关系图谱
+    Component.CustomGraph(), // 交互式关系图谱
     Component.DesktopOnly(Component.TableOfContents()), // 文章目录（仅在桌面端显示）
     Component.CustomBacklinks(), // 反向链接（引用了当前页面的其他页面）
   ],
