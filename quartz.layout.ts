@@ -2,6 +2,7 @@ import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
 import { FileTrieNode } from "./quartz/util/fileTrie"
 
+// 排序函数
 const explorerSortFn = (a: FileTrieNode, b: FileTrieNode) => {
   if ((!a.isFolder && !b.isFolder) || (a.isFolder && b.isFolder)) {
     if (a.data?.order !== undefined && b.data?.order !== undefined) {
@@ -27,19 +28,51 @@ const explorerSortFn = (a: FileTrieNode, b: FileTrieNode) => {
   }
 }
 
-// components shared across all pages
+// 图谱配置
+const graphConfig = {
+  localGraph: {
+    drag: true,
+    zoom: true,
+    depth: 1,
+    scale: 1.1,
+    repelForce: 0.9,
+    centerForce: 0.3,
+    linkDistance: 60,
+    fontSize: 0.8,
+    opacityScale: 8,
+    showTags: true,
+    removeTags: [],
+    enableRadial: true,
+  },
+  globalGraph: {
+    drag: true,
+    zoom: true,
+    depth: -1,
+    scale: 0.9,
+    repelForce: 0.9,
+    centerForce: 0.3,
+    linkDistance: 60,
+    fontSize: 0.8,
+    opacityScale: 8,
+    showTags: true,
+    removeTags: [],
+    enableRadial: true,
+  },
+}
+
+// 共享页面组件
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
   afterBody: [],
   footer: Component.Footer({
     links: {
-      GitHub: "https://github.com/lllllan02/learning",
+      GitHub: "https://github.com/lllllan02",
     },
   }),
 }
 
-// components for pages that display a single page (e.g. a single note)
+// 默认内容页面布局
 export const defaultContentPageLayout: PageLayout = {
   beforeBody: [
     Component.ConditionalRender({
@@ -68,42 +101,13 @@ export const defaultContentPageLayout: PageLayout = {
     }),
   ],
   right: [
-    Component.Graph({
-      localGraph: {
-        drag: true,
-        zoom: true,
-        depth: 1,
-        scale: 1.1,
-        repelForce: 0.9,
-        centerForce: 0.3,
-        linkDistance: 60,
-        fontSize: 0.8,
-        opacityScale: 8,
-        showTags: true,
-        removeTags: [],
-        enableRadial: true,
-      },
-      globalGraph: {
-        drag: true,
-        zoom: true,
-        depth: -1,
-        scale: 0.9,
-        repelForce: 0.9,
-        centerForce: 0.3,
-        linkDistance: 60,
-        fontSize: 0.8,
-        opacityScale: 8,
-        showTags: true,
-        removeTags: [],
-        enableRadial: true,
-      },
-    }),
+    Component.Graph(graphConfig),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
   ],
 }
 
-// components for pages that display lists of pages  (e.g. tags or folders)
+// 默认列表页面布局
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [
@@ -122,5 +126,5 @@ export const defaultListPageLayout: PageLayout = {
       sortFn: explorerSortFn,
     }),
   ],
-  right: [],
+  right: [Component.Graph(graphConfig)],
 }
