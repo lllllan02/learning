@@ -1,7 +1,6 @@
 ---
 title: 取消文件夹的目录展示
 tags:
-  - Obsidian
   - Quartz
   - 导航
 date: 2026-01-14
