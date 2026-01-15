@@ -47,9 +47,10 @@ Quartz 的字体大小主要在 SCSS 样式中定义，核心文件为 `quartz/s
 ```scss
 /* quartz/styles/custom.scss */
 
-article p {
-  font-size: 1.1rem;   /* 调大正文字号 */
-  line-height: 1.8rem; /* 调大行间距 */
+article {
+  &, p, ul, ol, dl, blockquote, td, th, dt, dd {
+    font-size: 1.2rem; /* 调大正文字号 */
+    line-height: 2rem; /* 调大行间距 */
+  }
 }
 ```
-
