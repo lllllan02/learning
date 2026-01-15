@@ -105,7 +105,7 @@ export const defaultContentPageLayout: PageLayout = {
   ],
   right: [
     // 页面右侧栏组件
-    Component.Graph(graphConfig), // 交互式关系图谱
+    Component.CustomGraph(graphConfig), // 交互式关系图谱
     Component.DesktopOnly(Component.TableOfContents()), // 文章目录（仅在桌面端显示）
     Component.Backlinks(), // 反向链接（引用了当前页面的其他页面）
   ],

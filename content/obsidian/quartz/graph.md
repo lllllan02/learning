@@ -1,92 +1,59 @@
 ---
-title: 关系图谱效果调整
+title: 关系图谱功能增强
 draft: false
 tags:
   - Obsidian
   - Quartz
   - 图谱
-aliases:
-cssclasses:
-date: 2026-01-14
+date: 2026-01-15
 order: 1
 ---
-本文记录了为了让 Quartz 图谱效果更接近 Obsidian 风格所做的调整，包括对 `quartz.layout.ts` 配置的详细中文说明。
 
-## 核心配置详解 (`quartz.layout.ts`)
+本文记录了对 Quartz 关系图谱进行的深度定制与功能增强，旨在提升图谱的交互体验与视觉表现力。通过创建自定义组件 `CustomGraph`，我们在保留官方核心功能的基础上，实现了多项实用功能。
 
-以下是针对 `localGraph`（局部图谱）和 `globalGraph`（全局图谱）的配置参数及其作用：
+## 实现效果
+
+### 1. 局部图谱全屏缩放
+在原有局部图谱的基础上，我们在右上角新增了一个 **放大（Maximize）** 按钮（图标为 `↗`）。
+- **点击效果**：点击后会弹出一个全屏覆盖层，专门展示当前页面的局部关系图。
+- **上下文保留**：与全局图谱不同，该功能专注于展示“当前笔记”的连接关系，适合在笔记较多时进行深度查阅。
+
+### 2. 右上角交互布局优化
+重新设计了图谱右上角的控制区域：
+- **布局顺序**：左侧为“全局图谱”图标，右侧为新的“全屏放大”图标，符合主流视觉操作逻辑。
+- **图标更新**：使用了更直观的箭头图标，增强了视觉指引。
+
+### 3. 全屏模式下的标签节点控制
+在全屏弹出层中，我们新增了一个 **标签节点（Tags）** 切换开关：
+- **位置**：位于全屏视图的右上角。
+- **功能**：一键开启或隐藏图谱中的 `#标签` 节点。
+- **动态重绘**：点击切换时，图谱会自动重新计算力导向布局（Force Layout），实现节点平滑地增减。
+
+### 4. 视觉体验优化
+针对 Obsidian 风格进行了细节打磨：
+- **节点增强**：增大了节点的基础半径，使其在复杂网络中更易被识别。
+- **文字排版**：优化了文字标签（Label）相对于节点的距离（Anchor），并调整了缩放时的显现算法，使文字在缩放过程中过渡更平滑。
+- **高亮交互**：保留并优化了鼠标悬停时邻居节点的高亮逻辑。
+
+## 维护建议
+
+### 1. 组件注册
+为了让自定义组件生效，需要在 `quartz/components/index.ts` 中完成导出，这样才能在布局配置中通过 `Component.CustomGraph` 访问：
 
 ```typescript
-Component.Graph({
-  localGraph: {
-    drag: true,          // 是否允许鼠标拖动节点
-    zoom: true,          // 是否允许使用鼠标滚轮缩放图谱
-    depth: 1,            // 局部图谱显示的层级深度（1 表示只显示与当前页直接相连的页面）
-    scale: 1.1,          // 图谱初始加载时的缩放比例
-    repelForce: 0.9,     // 节点之间的排斥力。值越大，节点分布越稀疏，防止重叠
-    centerForce: 0.3,    // 节点向中心聚集的向心力
-    linkDistance: 60,    // 节点之间连线的默认长度。增加此值可以为标签留出更多空间
-    fontSize: 0.8,       // 文字标签的字体大小比例
-    opacityScale: 8,     // 文字透明度随缩放变化的速率。值越高，文字在缩小时也越清晰可见
-    showTags: true,      // 是否在图谱中显示标签（Tags）节点
-    removeTags: [],      // 需要从图谱中过滤掉的特定标签
-    enableRadial: true,  // 是否启用径向布局，开启后节点会倾向于形成圆形簇，视觉更接近 Obsidian
-  },
-  globalGraph: {
-    drag: true,
-    zoom: true,
-    depth: -1,           // 全局图谱的深度设定为 -1，表示显示全库所有连接
-    scale: 0.9,          // 全局视图初始缩放比例通常略小，以容纳更多内容
-    repelForce: 0.9,
-    centerForce: 0.3,
-    linkDistance: 60,
-    fontSize: 0.8,
-    opacityScale: 8,
-    showTags: true,
-    removeTags: [],
-    enableRadial: true,
-  },
-})
+// quartz/components/index.ts
+import CustomGraph from "./CustomGraph"
+
+export {
+  // ... 其他组件
+  CustomGraph,
+}
 ```
 
-## 除配置外的代码级修改
+### 2. 相关文件
+由于采用了**自定义组件**模式，所有修改都集中在以下文件中：
+- `quartz/components/CustomGraph.tsx`
+- `quartz/components/scripts/custom-graph.inline.ts`
+- `quartz/components/styles/custom-graph.scss`
 
-为了达到最佳视觉效果，我们还对 Quartz 的内部渲染脚本进行了以下调整：
-
-1. **增大节点（点）的大小**：
-   在 `quartz/components/scripts/graph.inline.ts` 中，修改 `nodeRadius` 函数，将基础半径从 `2` 提高到了 `6`：
-
-   ```typescript
-   function nodeRadius(d: NodeData) {
-     const numLinks = graphData.links.filter(
-       (l) => l.source.id === d.id || l.target.id === d.id,
-     ).length
-     return 6 + Math.sqrt(numLinks) // 原始值为 2
-   }
-   ```
-
-2. **文字默认显示与间距优化**：
-   在同一文件中，找到创建 `label` 的位置，修改 `alpha` 和 `anchor`：
-
-   ```typescript
-   const label = new Text({
-     interactive: false,
-     eventMode: "none",
-     text: n.text,
-     alpha: 1,                  // 原始值为 0，改为 1 实现默认显示
-     anchor: { x: 0.5, y: 2.2 }, // 原始值为 1.2，改为 2.2 增加字点间距
-     style: {
-       fontSize: fontSize * 15,
-       // ... 其他样式
-     }
-   })
-   ```
-
-3. **缩放时的透明度逻辑优化**：
-   修改缩放时计算文字可见度的公式，去掉缓冲：
-
-   ```typescript
-   // zoom adjusts opacity of labels too
-   const scale = transform.k * opacityScale
-   let scaleOpacity = Math.max(scale - 1, 0) // 原始值为 Math.max((scale - 1) / 3.75, 0)
-   ```
+这种做法可以有效避免在升级 Quartz 核心代码时产生冲突。如果需要切换回官方原生图谱，只需在 `quartz.layout.ts` 中将 `Component.CustomGraph` 改回 `Component.Graph` 即可。

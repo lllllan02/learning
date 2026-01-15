@@ -18,7 +18,7 @@ import { Text, Graphics, Application, Container, Circle } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
 import { registerEscapeHandler, removeAllChildren } from "./util"
 import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
-import { D3Config } from "../Graph"
+import { D3Config } from "../CustomGraph"
 
 type GraphicsInfo = {
   color: string
@@ -209,7 +209,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const numLinks = graphData.links.filter(
       (l) => l.source.id === d.id || l.target.id === d.id,
     ).length
-    return 2 + Math.sqrt(numLinks)
+    return 6 + Math.sqrt(numLinks) // 从 2 调大到 6，让“点”显著变大
   }
 
   let hoveredNodeId: string | null = null
@@ -346,6 +346,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     renderLabels()
   }
 
+  // @ts-ignore
   tweens.forEach((tween) => tween.stop())
   tweens.clear()
 
@@ -366,6 +367,47 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const stage = app.stage
   stage.interactive = false
 
+  // 动态创建或获取控制按钮
+  let controls = graph.parentElement?.querySelector(".graph-controls") as HTMLElement
+  if (!controls) {
+    controls = document.createElement("div")
+    controls.className = "graph-controls"
+    controls.innerHTML = `
+      <button class="toggle-tags" aria-label="Toggle Tags">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+        <span>标签节点</span>
+      </button>
+    `
+    graph.parentElement?.appendChild(controls)
+  }
+
+  const toggleTagsBtn = controls.querySelector(".toggle-tags") as HTMLButtonElement
+  const cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
+
+  if (toggleTagsBtn) {
+    // 移除旧监听器
+    const newBtn = toggleTagsBtn.cloneNode(true) as HTMLButtonElement
+    toggleTagsBtn.parentNode?.replaceChild(newBtn, toggleTagsBtn)
+    
+    // 初始化状态
+    newBtn.classList.toggle("active", cfg.showTags)
+
+    newBtn.addEventListener("click", async (e) => {
+      e.stopPropagation()
+      cfg.showTags = !cfg.showTags
+      graph.dataset["cfg"] = JSON.stringify(cfg)
+      newBtn.classList.toggle("active", cfg.showTags)
+      
+      // 重新渲染图谱以应用节点过滤
+      const cleanup = await renderGraph(graph, fullSlug)
+      if (graph.classList.contains("global-graph-container")) {
+        globalGraphCleanups.push(cleanup)
+      } else {
+        localGraphCleanups.push(cleanup)
+      }
+    })
+  }
+
   const labelsContainer = new Container<Text>({ zIndex: 3, isRenderGroup: true })
   const nodesContainer = new Container<Graphics>({ zIndex: 2, isRenderGroup: true })
   const linkContainer = new Container<Graphics>({ zIndex: 1, isRenderGroup: true })
@@ -378,8 +420,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       interactive: false,
       eventMode: "none",
       text: n.text,
-      alpha: 0,
-      anchor: { x: 0.5, y: 1.2 },
+      alpha: 1,
+      anchor: { x: 0.5, y: 2.2 },
       style: {
         fontSize: fontSize * 15,
         fill: computedStyleMap["--dark"],
@@ -511,7 +553,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
           // zoom adjusts opacity of labels too
           const scale = transform.k * opacityScale
-          let scaleOpacity = Math.max((scale - 1) / 3.75, 0)
+          let scaleOpacity = Math.max(scale - 1, 0)
           const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
 
           for (const label of labelsContainer.children) {
@@ -596,6 +638,8 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   })
 
   const containers = [...document.getElementsByClassName("global-graph-outer")] as HTMLElement[]
+  const localContainers = [...document.getElementsByClassName("local-graph-outer")] as HTMLElement[]
+
   async function renderGlobalGraph() {
     const slug = getFullSlug(window)
     for (const container of containers) {
@@ -624,6 +668,34 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     }
   }
 
+  async function renderLocalExpandedGraph() {
+    const slug = getFullSlug(window)
+    for (const container of localContainers) {
+      container.classList.add("active")
+      const sidebar = container.closest(".sidebar") as HTMLElement
+      if (sidebar) {
+        sidebar.style.zIndex = "1"
+      }
+
+      const graphContainer = container.querySelector(".local-graph-container") as HTMLElement
+      registerEscapeHandler(container, hideLocalExpandedGraph)
+      if (graphContainer) {
+        globalGraphCleanups.push(await renderGraph(graphContainer, slug))
+      }
+    }
+  }
+
+  function hideLocalExpandedGraph() {
+    cleanupGlobalGraphs()
+    for (const container of localContainers) {
+      container.classList.remove("active")
+      const sidebar = container.closest(".sidebar") as HTMLElement
+      if (sidebar) {
+        sidebar.style.zIndex = ""
+      }
+    }
+  }
+
   async function shortcutHandler(e: HTMLElementEventMap["keydown"]) {
     if (e.key === "g" && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
       e.preventDefault()
@@ -638,6 +710,12 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   Array.from(containerIcons).forEach((icon) => {
     icon.addEventListener("click", renderGlobalGraph)
     window.addCleanup(() => icon.removeEventListener("click", renderGlobalGraph))
+  })
+
+  const expandIcons = document.getElementsByClassName("expand-icon")
+  Array.from(expandIcons).forEach((icon) => {
+    icon.addEventListener("click", renderLocalExpandedGraph)
+    window.addCleanup(() => icon.removeEventListener("click", renderLocalExpandedGraph))
   })
 
   document.addEventListener("keydown", shortcutHandler)
