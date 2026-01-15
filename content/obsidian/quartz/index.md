@@ -1,12 +1,35 @@
 ---
-title: Quartz 4
+title: Quartz 4 深度定制
 tags:
   - Obsidian
   - Quartz
 date: 2026-01-15
-order:
 ---
 
-[Quartz 4 官方仓库](https://github.com/jackyzha0/quartz)
+欢迎来到 Quartz 4 定制说明章节。这里记录了为了让 Quartz 博客更贴近 Obsidian 原生体验，以及提升交互效率所做的深度优化。
 
-[Quartz 4 官方文档](https://quartz.jzhao.xyz/)
+## 核心功能优化
+
+本章节主要包含以下深度定制内容：
+
+1.  **[文件树优化](folder.md)**：
+    *   实现了基于 `order` 属性的自定义排序逻辑。
+    *   支持空文件夹（不含 `index.md`）仅折叠而不展示自动生成的目录页。
+2.  **[关系图谱优化](graph.md)**：
+    *   新增“放大当前图谱”功能，支持局部视图的全屏查阅。
+    *   新增“标签节点”切换开关，可动态开启或隐藏图谱中的 `#标签` 节点。
+    *   针对 Obsidian 风格打磨了节点大小与文字显现效果。
+3.  **[反向链接优化](backlink.md)**：
+    *   实现了反向链接的精准跳转，点击可定位到源文档的具体引用位置。
+    *   增强了 Popover 预览体验，鼠标悬停即可查看引用的上下文。
+
+## 其他定制
+
+*   **[自定义字体设置](fonts.md)**：介绍了如何引入并配置如“霞鹜文楷”等第三方中文字体。
+*   **[代码块语法高亮](syntax-highlighting.md)**：针对不同主题的代码高亮方案进行了配置与调整。
+
+---
+
+### 相关资源
+- [Quartz 4 官方仓库](https://github.com/jackyzha0/quartz)
+- [Quartz 4 官方文档](https://quartz.jzhao.xyz/)
