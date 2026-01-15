@@ -2,8 +2,10 @@
 
 // 自定义字号设置
 article {
-  &, p, ul, ol, dl, blockquote, td, th, dt, dd {
+  &, p, ul, ol, li, dl, blockquote, td, th, dt, dd {
     font-size: 1.2rem; /* 调大正文字号 */
     line-height: 2rem; /* 调大行间距 */
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
   }
 }
