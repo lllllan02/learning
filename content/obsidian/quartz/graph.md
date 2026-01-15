@@ -35,6 +35,43 @@ order: 1
 - **文字排版**：优化了文字标签（Label）相对于节点的距离（Anchor），并调整了缩放时的显现算法，使文字在缩放过程中过渡更平滑。
 - **高亮交互**：保留并优化了鼠标悬停时邻居节点的高亮逻辑。
 
+## 参数配置
+
+在 [`quartz.layout.ts`](https://github.com/lllllan02/blog/blob/main/quartz.layout.ts) 中，我们对图谱的物理模拟和视觉样式进行了精细调优，以达到类似 Obsidian 的效果：
+
+```typescript
+const graphConfig = {
+  localGraph: {
+    drag: true, // 是否允许拖拽节点
+    zoom: true, // 是否允许缩放
+    depth: 1, // 本地图谱显示的链接深度
+    scale: 1.1, // 初始缩放比例
+    repelForce: 0.9, // 节点间的斥力系数
+    centerForce: 0.3, // 节点向中心的向心力系数
+    linkDistance: 60, // 链接的默认距离
+    fontSize: 0.8, // 标签字体大小
+    opacityScale: 8, // 节点透明度缩放系数
+    showTags: true, // 是否显示标签节点
+    removeTags: [], // 要在图谱中隐藏的标签
+    enableRadial: true, // 是否启用径向布局
+  },
+  globalGraph: {
+    drag: true,
+    zoom: true,
+    depth: -1,
+    scale: 0.9,
+    repelForce: 0.9,
+    centerForce: 0.3,
+    linkDistance: 60,
+    fontSize: 0.8,
+    opacityScale: 8,
+    showTags: true,
+    removeTags: [],
+    enableRadial: true,
+  },
+}
+```
+
 ## 维护建议
 
 ### 1. 组件注册
@@ -50,10 +87,21 @@ export {
 }
 ```
 
-### 2. 相关文件
+### 2. 布局应用
+最后，在 [`quartz.layout.ts`](https://github.com/lllllan02/blog/blob/main/quartz.layout.ts) 中将原有的 `Component.Graph` 替换为 `Component.CustomGraph`：
+
+```typescript
+// quartz.layout.ts
+right: [
+  Component.CustomGraph(graphConfig), // 使用增强版自定义图谱
+  // ... 其他组件
+],
+```
+
+### 3. 相关文件
 由于采用了**自定义组件**模式，所有修改都集中在以下文件中：
-- `quartz/components/CustomGraph.tsx`
-- `quartz/components/scripts/custom-graph.inline.ts`
-- `quartz/components/styles/custom-graph.scss`
+- [quartz/components/CustomGraph.tsx](https://github.com/lllllan02/blog/blob/main/quartz/components/CustomGraph.tsx)
+- [quartz/components/scripts/custom-graph.inline.ts](https://github.com/lllllan02/blog/blob/main/quartz/components/scripts/custom-graph.inline.ts)
+- [quartz/components/styles/custom-graph.scss](https://github.com/lllllan02/blog/blob/main/quartz/components/styles/custom-graph.scss)
 
 这种做法可以有效避免在升级 Quartz 核心代码时产生冲突。如果需要切换回官方原生图谱，只需在 `quartz.layout.ts` 中将 `Component.CustomGraph` 改回 `Component.Graph` 即可。
