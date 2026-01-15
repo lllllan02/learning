@@ -89,6 +89,12 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     enableRadial,
   } = JSON.parse(graph.dataset["cfg"]!) as D3Config
 
+  const i18n = JSON.parse(graph.dataset["i18n"]!) as {
+    depth: string
+    all: string
+    nodes: string
+  }
+
   const data: Map<SimpleSlug, ContentDetails> = new Map(
     Object.entries<ContentDetails>(await fetchData).map(([k, v]) => [
       simplifySlug(k as FullSlug),
@@ -124,20 +130,36 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const neighbourhood = new Set<SimpleSlug>()
   const wl: (SimpleSlug | "__SENTINEL")[] = [slug, "__SENTINEL"]
+  let hasMore = false
   if (depth >= 0) {
     while (depth >= 0 && wl.length > 0) {
       // compute neighbours
       const cur = wl.shift()!
       if (cur === "__SENTINEL") {
         depth--
-        wl.push("__SENTINEL")
+        if (depth >= 0 && wl.length > 0) {
+          wl.push("__SENTINEL")
+        }
       } else {
+        if (neighbourhood.has(cur)) continue
         neighbourhood.add(cur)
-        const outgoing = links.filter((l) => l.source === cur)
-        const incoming = links.filter((l) => l.target === cur)
-        wl.push(...outgoing.map((l) => l.target), ...incoming.map((l) => l.source))
+        
+        // 找出所有未访问过的邻居，并去重
+        const neighbours = links
+          .filter((l) => l.source === cur || l.target === cur)
+          .map((l) => (l.source === cur ? l.target : l.source))
+          .filter((n) => !neighbourhood.has(n))
+        
+        // 进一步确保 wl 中不会有大量重复节点
+        for (const n of neighbours) {
+          if (!wl.includes(n)) {
+            wl.push(n)
+          }
+        }
       }
     }
+    // hasMore 准确判断：队列中是否还有任何不在当前邻域内的真实节点
+    hasMore = wl.some((item) => item !== "__SENTINEL" && !neighbourhood.has(item))
   } else {
     validLinks.forEach((id) => neighbourhood.add(id))
     if (showTags) tags.forEach((tag) => neighbourhood.add(tag))
@@ -369,19 +391,38 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   // 动态创建或获取控制按钮
   let controls = graph.parentElement?.querySelector(".graph-controls") as HTMLElement
+  const isLocalExpanded = graph.classList.contains("local-graph-container")
+
   if (!controls) {
     controls = document.createElement("div")
     controls.className = "graph-controls"
+    const depthControlHtml = isLocalExpanded
+      ? `
+      <div class="depth-control">
+        <button class="depth-dec" aria-label="Decrease Depth">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <span class="depth-display">${i18n.depth}: ${depth === -1 ? i18n.all : depth}</span>
+        <button class="depth-inc" aria-label="Increase Depth">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+      </div>`
+      : ""
+
     controls.innerHTML = `
       <button class="toggle-tags" aria-label="Toggle Tags">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-        <span>标签节点</span>
+        <span>${i18n.nodes}</span>
       </button>
+      ${depthControlHtml}
     `
     graph.parentElement?.appendChild(controls)
   }
 
   const toggleTagsBtn = controls.querySelector(".toggle-tags") as HTMLButtonElement
+  const depthDecBtn = controls.querySelector(".depth-dec") as HTMLButtonElement
+  const depthIncBtn = controls.querySelector(".depth-inc") as HTMLButtonElement
+  const depthDisplay = controls.querySelector(".depth-display") as HTMLSpanElement
   const cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
 
   if (toggleTagsBtn) {
@@ -399,11 +440,66 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       newBtn.classList.toggle("active", cfg.showTags)
       
       // 重新渲染图谱以应用节点过滤
-      const cleanup = await renderGraph(graph, fullSlug)
+      const result = await renderGraph(graph, fullSlug)
       if (graph.classList.contains("global-graph-container")) {
-        globalGraphCleanups.push(cleanup)
+        globalGraphCleanups.push(result)
       } else {
-        localGraphCleanups.push(cleanup)
+        localGraphCleanups.push(result)
+      }
+    })
+  }
+
+  if (depthDecBtn && depthIncBtn && depthDisplay) {
+    // 移除旧监听器
+    const newDecBtn = depthDecBtn.cloneNode(true) as HTMLButtonElement
+    const newIncBtn = depthIncBtn.cloneNode(true) as HTMLButtonElement
+    depthDecBtn.parentNode?.replaceChild(newDecBtn, depthDecBtn)
+    depthIncBtn.parentNode?.replaceChild(newIncBtn, depthIncBtn)
+
+    // 初始化显示
+    depthDisplay.textContent = `${i18n.depth}: ${cfg.depth === -1 ? i18n.all : cfg.depth}`
+
+    // 初始按钮状态
+    newDecBtn.style.opacity = (cfg.depth <= 1 && cfg.depth !== -1) ? "0.3" : "1"
+    newDecBtn.style.cursor = (cfg.depth <= 1 && cfg.depth !== -1) ? "not-allowed" : "pointer"
+    newIncBtn.style.opacity = !hasMore ? "0.3" : "1"
+    newIncBtn.style.cursor = !hasMore ? "not-allowed" : "pointer"
+
+    const updateDepth = async (newDepth: number) => {
+      cfg.depth = newDepth
+      graph.dataset["cfg"] = JSON.stringify(cfg)
+      depthDisplay.textContent = `${i18n.depth}: ${newDepth === -1 ? i18n.all : newDepth}`
+      
+      const result = await renderGraph(graph, fullSlug)
+      graphResults.set(graph, result)
+      if (graph.classList.contains("global-graph-container")) {
+        globalGraphCleanups = [result]
+      } else if (graph.classList.contains("local-graph-container")) {
+        globalGraphCleanups = [result]
+      } else {
+        localGraphCleanups = [result]
+      }
+
+      // 更新按钮视觉状态
+      newDecBtn.style.opacity = (newDepth <= 1 && newDepth !== -1) ? "0.3" : "1"
+      newDecBtn.style.cursor = (newDepth <= 1 && newDepth !== -1) ? "not-allowed" : "pointer"
+      newIncBtn.style.opacity = !result.hasMore ? "0.3" : "1"
+      newIncBtn.style.cursor = !result.hasMore ? "not-allowed" : "pointer"
+    }
+
+    newDecBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      if (cfg.depth > 1) {
+        updateDepth(cfg.depth - 1)
+      }
+    })
+
+    newIncBtn.addEventListener("click", (e) => {
+      e.stopPropagation()
+      const currentResult = graphResults.get(graph)
+
+      if (currentResult?.hasMore && cfg.depth !== -1) {
+        updateDepth(cfg.depth + 1)
       }
     })
   }
@@ -592,25 +688,38 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
-  return () => {
-    stopAnimation = true
-    app.destroy()
+  return {
+    hasMore,
+    cleanup: () => {
+      stopAnimation = true
+      app.destroy()
+    },
   }
 }
 
-let localGraphCleanups: (() => void)[] = []
-let globalGraphCleanups: (() => void)[] = []
+type GraphCleanup = {
+  hasMore: boolean
+  cleanup: () => void
+}
+
+const graphResults = new Map<HTMLElement, GraphCleanup>()
+let localGraphCleanups: GraphCleanup[] = []
+let globalGraphCleanups: GraphCleanup[] = []
 
 function cleanupLocalGraphs() {
-  for (const cleanup of localGraphCleanups) {
-    cleanup()
+  for (const item of localGraphCleanups) {
+    item.cleanup()
   }
   localGraphCleanups = []
 }
 
 function cleanupGlobalGraphs() {
-  for (const cleanup of globalGraphCleanups) {
-    cleanup()
+  for (const item of globalGraphCleanups) {
+    item.cleanup()
+    // 同时清理全局 Map 中的对应项
+    for (const [el, res] of graphResults.entries()) {
+      if (res === item) graphResults.delete(el)
+    }
   }
   globalGraphCleanups = []
 }
@@ -623,7 +732,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     cleanupLocalGraphs()
     const localGraphContainers = document.getElementsByClassName("graph-container")
     for (const container of localGraphContainers) {
-      localGraphCleanups.push(await renderGraph(container as HTMLElement, slug))
+      const result = await renderGraph(container as HTMLElement, slug)
+      graphResults.set(container as HTMLElement, result)
+      localGraphCleanups = [result]
     }
   }
 
@@ -652,7 +763,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const graphContainer = container.querySelector(".global-graph-container") as HTMLElement
       registerEscapeHandler(container, hideGlobalGraph)
       if (graphContainer) {
-        globalGraphCleanups.push(await renderGraph(graphContainer, slug))
+        const result = await renderGraph(graphContainer, slug)
+        graphResults.set(graphContainer, result)
+        globalGraphCleanups = [result]
       }
     }
   }
@@ -680,7 +793,9 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       const graphContainer = container.querySelector(".local-graph-container") as HTMLElement
       registerEscapeHandler(container, hideLocalExpandedGraph)
       if (graphContainer) {
-        globalGraphCleanups.push(await renderGraph(graphContainer, slug))
+        const result = await renderGraph(graphContainer, slug)
+        graphResults.set(graphContainer, result)
+        globalGraphCleanups = [result]
       }
     }
   }

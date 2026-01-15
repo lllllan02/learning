@@ -63,12 +63,25 @@ export default ((opts?: Partial<GraphOptions>) => {
   const CustomGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const localGraph = { ...defaultOptions.localGraph, ...opts?.localGraph }
     const globalGraph = { ...defaultOptions.globalGraph, ...opts?.globalGraph }
+
+    const isZh = cfg.locale.startsWith("zh")
+    const graphLabels = {
+      depth: isZh ? "深度" : "Depth",
+      all: isZh ? "全" : "All",
+      nodes: isZh ? "标签节点" : "Nodes",
+    }
+
     return (
       <div class={classNames(displayClass, "graph")}>
         <h3>{i18n(cfg.locale).components.graph.title}</h3>
         <div class="graph-outer">
-          <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
+          <div
+            class="graph-container"
+            data-cfg={JSON.stringify(localGraph)}
+            data-i18n={JSON.stringify(graphLabels)}
+          ></div>
           <div class="graph-icon-container">
+            {/* ... */}
             <button class="global-graph-icon" aria-label="Global Graph">
               <svg
                 version="1.1"
@@ -114,10 +127,18 @@ export default ((opts?: Partial<GraphOptions>) => {
           </div>
         </div>
         <div class="global-graph-outer">
-          <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
+          <div
+            class="global-graph-container"
+            data-cfg={JSON.stringify(globalGraph)}
+            data-i18n={JSON.stringify(graphLabels)}
+          ></div>
         </div>
         <div class="local-graph-outer">
-          <div class="local-graph-container" data-cfg={JSON.stringify(localGraph)}></div>
+          <div
+            class="local-graph-container"
+            data-cfg={JSON.stringify(localGraph)}
+            data-i18n={JSON.stringify(graphLabels)}
+          ></div>
         </div>
       </div>
     )
