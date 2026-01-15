@@ -1,73 +1,67 @@
 ---
-title: 取消文件夹的目录展示
+title: 文件树功能增强与自定义排序
 tags:
   - Quartz
   - 导航
-date: 2026-01-14
+date: 2026-01-15
 order: 2
 ---
 
-本文件记录了如何通过修改 Quartz 核心组件逻辑，实现“空文件夹（不含 `index.md`）点击仅折叠且不显示自动生成的目录列表”的功能。
+本文记录了对 Quartz 文件树（Explorer）进行的深度定制。通过创建自定义组件 `CustomExplorer`，我们实现了“取消空文件夹目录展示”以及“基于属性的自定义排序”两项核心增强。
 
-## 修改核心脚本：实现智能点击拦截
+## 实现逻辑
 
-**文件路径**：`quartz/components/scripts/explorer.inline.ts`
+在自定义组件中，我们对文件树的生成与排序逻辑进行了以下优化：
 
-### 智能判断文件夹是否有 index.md
-修改 `createFolderNode` 函数（约 118 行）。我们将原有简单的 `link` 判断逻辑升级为“链接 + 内容存在”的双重判断。
+### 1. 取消空文件夹的自动目录
+在渲染文件树时，系统会智能判断文件夹内容：
+- **有内容的文件夹**：若包含 `index.md`，则渲染为 `<a>` 链接，点击正常跳转。
+- **空文件夹**：若不含 `index.md`，则降级为 `<button>`，点击仅触发展开/折叠，避免进入空白的自动生成目录页。
 
-**查找原代码位置：**
+### 2. 内置自定义排序 (order)
+我们将原本分散在布局文件中的排序逻辑集成到了 `CustomExplorer` 组件内部。现在，你可以通过在 Markdown 文件的 Frontmatter 中添加 `order` 属性来控制显示顺序：
+
+```markdown
+---
+title: 某篇笔记
+order: 1  # 数值越小越靠前
+---
+```
+
+**排序规则：**
+1. **显式排序优先**：拥有 `order` 属性的项始终排在没有该属性的项之前。
+2. **数值排序**：按 `order` 数值升序排列。
+3. **回退机制**：若 `order` 相同或缺失，则回退到默认的“文件夹在前 + 字母顺序”排列。
+
+## 维护建议
+
+### 1. 组件注册
+在 `quartz/components/index.ts` 中完成组件导出：
+
 ```typescript
-  if (opts.folderClickBehavior === "link") {
-    // Replace button with link for link behavior
-    // ... 原有逻辑 ...
-  } else {
-    const span = titleContainer.querySelector(".folder-title") as HTMLElement
-    span.textContent = node.displayName
-  }
+// quartz/components/index.ts
+import CustomExplorer from "./CustomExplorer"
+
+export {
+  // ... 其他组件
+  CustomExplorer,
+}
 ```
 
-**替换为以下代码：**
-```typescript {6}
-  /**
-   * 核心逻辑修改：智能判断文件夹是否有 index.md
-   * 只有当文件夹确实有关联的 markdown 数据时，才渲染为 <a> 链接
-   * 否则保持为 <button>，仅触发折叠/展开逻辑
-   */
-  if (opts.folderClickBehavior === "link" && node.data)
-  ...
-```
+### 2. 布局应用
+由于功能已高度封装，在 `quartz.layout.ts` 中仅需一行调用，无需额外传入排序函数：
 
-### 强制绑定折叠事件
-
-修改 `setupExplorer` 函数（约 249 行）。我们需要移除原有的 `if` 条件包裹。
-
-**查找原代码位置：**
-```typescript {1-2,10}
-    // Set up folder click handlers
-    if (opts.folderClickBehavior === "collapse") {
-      const folderButtons = explorer.getElementsByClassName(
-        "folder-button",
-      ) as HTMLCollectionOf<HTMLElement>
-      for (const button of folderButtons) {
-        button.addEventListener("click", toggleFolder)
-        window.addCleanup(() => button.removeEventListener("click", toggleFolder))
-      }
-    }
-```
-
-**替换为以下代码：**
 ```typescript
-    /**
-     * 核心逻辑修改：无条件绑定文件夹点击事件
-     * 确保那些因为没有 index.md 而被降级为按钮的文件夹，依然能响应点击并展开/折叠
-     */
-    const folderButtons = explorer.getElementsByClassName(
-      "folder-button",
-    ) as HTMLCollectionOf<HTMLElement>
-    for (const button of folderButtons) {
-      button.addEventListener("click", toggleFolder)
-      window.addCleanup(() => button.removeEventListener("click", toggleFolder))
-    }
+// quartz.layout.ts
+left: [
+  // ... 其他组件
+  Component.CustomExplorer(),
+],
 ```
 
+### 3. 相关文件
+所有增强逻辑均封装在以下文件中，已同步至 GitHub 仓库：
+- [quartz/components/CustomExplorer.tsx](https://github.com/lllllan02/blog/blob/main/quartz/components/CustomExplorer.tsx)
+- [quartz/components/scripts/custom-explorer.inline.ts](https://github.com/lllllan02/blog/blob/main/quartz/components/scripts/custom-explorer.inline.ts)
+
+这种自定义组件模式确保了官方核心代码的纯净，极大地简化了后续的系统升级工作。

@@ -1,35 +1,5 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
-import { FileTrieNode } from "./quartz/util/fileTrie"
-
-// 排序函数：用于定义文件树（Explorer）中文件和文件夹的显示顺序
-const explorerSortFn = (a: FileTrieNode, b: FileTrieNode) => {
-  if ((!a.isFolder && !b.isFolder) || (a.isFolder && b.isFolder)) {
-    // 如果都是文件或都是文件夹，按 order 属性排序
-    if (a.data?.order !== undefined && b.data?.order !== undefined) {
-      return a.data.order - b.data.order
-    }
-    if (a.data?.order !== undefined) {
-      return -1
-    }
-    if (b.data?.order !== undefined) {
-      return 1
-    }
-
-    // 如果没有 order，按名称字母顺序排序
-    return a.displayName.localeCompare(b.displayName, undefined, {
-      numeric: true,
-      sensitivity: "base",
-    })
-  }
-
-  // 文件夹排在文件前面
-  if (!a.isFolder && b.isFolder) {
-    return 1
-  } else {
-    return -1
-  }
-}
 
 // 图谱配置：定义本地图谱和全局图谱的交互与视觉样式
 const graphConfig = {
@@ -99,9 +69,7 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() }, // 阅读模式切换开关
       ],
     }),
-    Component.Explorer({
-      sortFn: explorerSortFn, // 文件排序函数
-    }),
+    Component.CustomExplorer(),
   ],
   right: [
     // 页面右侧栏组件

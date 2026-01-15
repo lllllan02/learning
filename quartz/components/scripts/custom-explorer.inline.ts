@@ -115,7 +115,12 @@ function createFolderNode(
     folderContainer.classList.add("active")
   }
 
-  if (opts.folderClickBehavior === "link") {
+  /**
+   * 核心逻辑修改：智能判断文件夹是否有 index.md
+   * 只有当文件夹确实有关联的 markdown 数据时，才渲染为 <a> 链接
+   * 否则保持为 <button>，仅触发折叠/展开逻辑
+   */
+  if (opts.folderClickBehavior === "link" && node.data) {
     // Replace button with link for link behavior
     const button = titleContainer.querySelector(".folder-button") as HTMLElement
     const a = document.createElement("a")
@@ -241,15 +246,16 @@ async function setupExplorer(currentSlug: FullSlug) {
       window.addCleanup(() => button.removeEventListener("click", toggleExplorer))
     }
 
-    // Set up folder click handlers
-    if (opts.folderClickBehavior === "collapse") {
-      const folderButtons = explorer.getElementsByClassName(
-        "folder-button",
-      ) as HTMLCollectionOf<HTMLElement>
-      for (const button of folderButtons) {
-        button.addEventListener("click", toggleFolder)
-        window.addCleanup(() => button.removeEventListener("click", toggleFolder))
-      }
+    /**
+     * 核心逻辑修改：无条件绑定文件夹点击事件
+     * 确保那些因为没有 index.md 而被降级为按钮的文件夹，依然能响应点击并展开/折叠
+     */
+    const folderButtons = explorer.getElementsByClassName(
+      "folder-button",
+    ) as HTMLCollectionOf<HTMLElement>
+    for (const button of folderButtons) {
+      button.addEventListener("click", toggleFolder)
+      window.addCleanup(() => button.removeEventListener("click", toggleFolder))
     }
 
     const folderIcons = explorer.getElementsByClassName(

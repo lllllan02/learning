@@ -11,6 +11,7 @@ import ContentMeta from "./ContentMeta"
 import Spacer from "./Spacer"
 import TableOfContents from "./TableOfContents"
 import Explorer from "./Explorer"
+import CustomExplorer from "./CustomExplorer"
 import TagList from "./TagList"
 import Graph from "./Graph"
 import CustomGraph from "./CustomGraph"
@@ -38,6 +39,7 @@ export {
   Spacer,
   TableOfContents,
   Explorer,
+  CustomExplorer,
   TagList,
   Graph,
   CustomGraph,
