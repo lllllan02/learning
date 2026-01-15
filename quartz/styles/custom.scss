@@ -1,3 +1,7 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+// 自定义字号设置 
+article p {
+    font-size: 1.1rem;   /* 调大正文字号 */
+    line-height: 1.8rem; /* 调大行间距 */
+}
