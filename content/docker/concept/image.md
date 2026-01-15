@@ -1,8 +1,8 @@
 ---
-title: Docker 镜像 
+title: Docker Image 
 tags: 
   - Docker
-  - 镜像
+  - Image
 date: 2026-01-15
 order: 2
 ---
@@ -16,4 +16,4 @@ order: 2
 1. **不可改变**。一旦生成了镜像，就无法被修改。你只能创建新镜像或在其上添加更改。
 2. **多层组成**。容器镜像由多层组成。每一层代表一组文件系统变更，用于添加、删除或修改文件。
 
-下一步，从 [Docker Hub](https://hub.docker.com/) 寻找你需要的镜像。
+下一步，了解 [[docker/concept/registry|Docker Registry]] 之后从 [Docker Hub](https://hub.docker.com/) 寻找你需要的镜像。
