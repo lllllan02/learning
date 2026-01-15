@@ -16,6 +16,7 @@ import TagList from "./TagList"
 import Graph from "./Graph"
 import CustomGraph from "./CustomGraph"
 import Backlinks from "./Backlinks"
+import CustomBacklinks from "./CustomBacklinks"
 import Search from "./Search"
 import Footer from "./Footer"
 import DesktopOnly from "./DesktopOnly"
@@ -44,6 +45,7 @@ export {
   Graph,
   CustomGraph,
   Backlinks,
+  CustomBacklinks,
   Search,
   Footer,
   DesktopOnly,

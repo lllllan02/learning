@@ -1,10 +1,10 @@
 ---
-title: 文件树功能增强与自定义排序
+title: 文件树优化
 tags:
   - Quartz
   - 导航
 date: 2026-01-15
-order: 2
+order: 1
 ---
 
 本文记录了对 Quartz 文件树（Explorer）进行的深度定制。通过创建自定义组件 `CustomExplorer`，我们实现了“取消空文件夹目录展示”以及“基于属性的自定义排序”两项核心增强。

@@ -32,10 +32,10 @@ const defaultOptions: Options = {
   externalLinkIcon: true,
 }
 
-export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
+export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
   const opts = { ...defaultOptions, ...userOpts }
   return {
-    name: "LinkProcessing",
+    name: "CustomLinkProcessing",
     htmlPlugins(ctx) {
       return [
         () => {
@@ -48,6 +48,8 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
               allSlugs: ctx.allSlugs,
             }
 
+            let linkCount = 0
+            const backlinksMetadata: Record<SimpleSlug, string[]> = {}
             visit(tree, "element", (node, _index, _parent) => {
               // rewrite all links
               if (
@@ -123,6 +125,14 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
                   const simple = simplifySlug(full)
                   outgoing.add(simple)
                   node.properties["data-slug"] = full
+
+                  const anchor = (node.properties.id as string) || `backlink-${linkCount++}`
+                  node.properties.id = anchor
+
+                  if (!backlinksMetadata[simple]) {
+                    backlinksMetadata[simple] = []
+                  }
+                  backlinksMetadata[simple].push(anchor)
                 }
 
                 // rewrite link internals if prettylinks is on
@@ -160,6 +170,7 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
             })
 
             file.data.links = [...outgoing]
+            file.data.backlinksMetadata = backlinksMetadata
           }
         },
       ]
@@ -170,5 +181,6 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
 declare module "vfile" {
   interface DataMap {
     links: SimpleSlug[]
+    backlinksMetadata: Record<SimpleSlug, string[]>
   }
 }

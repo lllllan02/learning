@@ -17,7 +17,7 @@ export default ((opts?: Partial<BacklinksOptions>) => {
   const options: BacklinksOptions = { ...defaultOptions, ...opts }
   const { OverflowList, overflowListAfterDOMLoaded } = OverflowListFactory()
 
-  const Backlinks: QuartzComponent = ({
+  const CustomBacklinks: QuartzComponent = ({
     fileData,
     allFiles,
     displayClass,
@@ -33,13 +33,17 @@ export default ((opts?: Partial<BacklinksOptions>) => {
         <h3>{i18n(cfg.locale).components.backlinks.title}</h3>
         <OverflowList>
           {backlinkFiles.length > 0 ? (
-            backlinkFiles.map((f) => (
-              <li>
-                <a href={resolveRelative(fileData.slug!, f.slug!)} class="internal">
-                  {f.frontmatter?.title}
-                </a>
-              </li>
-            ))
+            backlinkFiles.map((f) => {
+              const anchors = f.backlinksMetadata?.[slug] || []
+              const firstAnchor = anchors.length > 0 ? `#${anchors[0]}` : ""
+              return (
+                <li>
+                  <a href={resolveRelative(fileData.slug!, f.slug!) + firstAnchor} class="internal">
+                    {f.frontmatter?.title}
+                  </a>
+                </li>
+              )
+            })
           ) : (
             <li>{i18n(cfg.locale).components.backlinks.noBacklinksFound}</li>
           )}
@@ -48,8 +52,8 @@ export default ((opts?: Partial<BacklinksOptions>) => {
     )
   }
 
-  Backlinks.css = style
-  Backlinks.afterDOMLoaded = overflowListAfterDOMLoaded
+  CustomBacklinks.css = style
+  CustomBacklinks.afterDOMLoaded = overflowListAfterDOMLoaded
 
-  return Backlinks
+  return CustomBacklinks
 }) satisfies QuartzComponentConstructor

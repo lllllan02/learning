@@ -1,12 +1,12 @@
 ---
-title: 关系图谱功能增强
+title: 关系图谱优化
 draft: false
 tags:
   - Obsidian
   - Quartz
   - 图谱
 date: 2026-01-15
-order: 1
+order: 2
 ---
 
 本文记录了对 Quartz 关系图谱进行的深度定制与功能增强，旨在提升图谱的交互体验与视觉表现力。通过创建自定义组件 `CustomGraph`，我们在保留官方核心功能的基础上，实现了多项实用功能。
