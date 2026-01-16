@@ -5,7 +5,15 @@ article {
   &, p, ul, ol, li, dl, blockquote, td, th, dt, dd {
     font-size: 1.2rem; /* 调大正文字号 */
     line-height: 2rem; /* 调大行间距 */
-    margin-top: 0.3rem;
+  }
+
+  p, ul, ol, dl, blockquote {
+    margin-top: 1rem; /* 增大段落及块级元素间距 */
+    margin-bottom: 1rem;
+  }
+
+  li {
+    margin-top: 0.3rem; /* 列表项保持较小的间距 */
     margin-bottom: 0.3rem;
   }
 }
