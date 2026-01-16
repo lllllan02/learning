@@ -1,5 +1,6 @@
 // Plugins
 export { CodeFold } from "./CodeFold"
+export { Highlight } from "./Highlight"
 export { CrawlLinks } from "./Links"
 
 // Components

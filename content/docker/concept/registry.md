@@ -11,7 +11,7 @@ order: 3
 
 ## 什么是 Registry
 
-**Registry 是一个集中存储和[[docker/concept/container|容器]][[docker/concept/image|镜像]]的地方**。它可以是公共的，也可以是私人的。[Docker Hub](https://hub.docker.com/) 是一个任何人都可以使用的公共注册表，也是默认注册表。
+==Registry 是一个集中存储和[[docker/concept/container|容器]][[docker/concept/image|镜像]]的地方==。它可以是公共的，也可以是私人的。[Docker Hub](https://hub.docker.com/) 是一个任何人都可以使用的公共注册表，也是默认注册表。
 
 更多受欢迎的公共注册表包括：
 
