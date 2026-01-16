@@ -71,6 +71,7 @@ const config: QuartzConfig = {
       }), // 代码块语法高亮
       Custom.CodeFold(), // 代码块折叠
       Custom.Highlight(), // 高亮
+      Custom.Callout(), // 自定义标注
       Plugin.ObsidianFlavoredMarkdown({ 
         enableInHtmlEmbed: false,  // 禁用 HTML 嵌入
         highlight: false, // 禁用高亮

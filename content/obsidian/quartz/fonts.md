@@ -42,25 +42,39 @@ Quartz 的字体大小主要在 SCSS 样式中定义，核心文件为 `quartz/s
 
 ### 如何自定义
 
-建议在 `quartz/styles/custom.scss` 中添加覆盖样式。目前的配置通过增大段落间距并保持列表项紧凑，提升了长文本的可读性：
+建议在 `quartz/styles/custom.scss` 中添加覆盖样式。目前的配置使用了 CSS 变量，通过简化选择器并优化间距，提升了长文本的可读性：
 
 ```scss
 /* quartz/styles/custom.scss */
 
+:root {
+  --article-font-size: 1.2rem;   /* 调大正文字号 */
+  --article-line-height: 2rem;   /* 调大行间距 */
+  --article-margin: 1rem;       /* 增大段落间距 */
+  --article-h1-size: 1.8rem;
+  --article-h2-size: 1.5rem;
+  --article-h3-size: 1.35rem;
+  --article-h4-size: 1.25rem;
+}
+
 article {
-  &, p, ul, ol, li, dl, blockquote, td, th, dt, dd {
-    font-size: 1.2rem; /* 调大正文字号 */
-    line-height: 2rem; /* 调大行间距 */
-  }
+  font-size: var(--article-font-size);
+  line-height: var(--article-line-height);
 
+  // 标题间距与大小
+  h1 { font-size: var(--article-h1-size); margin-top: 1.8rem; }
+  h2 { font-size: var(--article-h2-size); margin-top: 1.6rem; }
+  h3 { font-size: var(--article-h3-size); margin-top: 1.4rem; }
+  h4 { font-size: var(--article-h4-size); margin-top: 1.2rem; }
+
+  // 块级元素间距
   p, ul, ol, dl, blockquote {
-    margin-top: 1rem; /* 增大段落及块级元素间距 */
-    margin-bottom: 1rem;
+    margin: var(--article-margin) 0;
   }
 
+  // 列表项保持紧凑
   li {
-    margin-top: 0.3rem; /* 列表项保持较小的间距 */
-    margin-bottom: 0.3rem;
+    margin: 0.3rem 0;
   }
 }
 ```
