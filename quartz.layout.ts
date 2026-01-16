@@ -1,4 +1,5 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
+import { SimpleSlug } from "./quartz/util/path"
 import * as Component from "./quartz/components"
 import * as Custom from "./quartz/custom"
 
@@ -6,10 +7,20 @@ import * as Custom from "./quartz/custom"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(), // 页面 <head> 标签中的元数据
   header: [], // 页面顶部的标题栏组件
-  afterBody: [], // 正文内容下方的组件
+  afterBody: [
+    Component.ConditionalRender({
+      component: Component.RecentNotes({
+        title: "最近更新",
+        limit: 1,
+        linkToMore: "tags/" as SimpleSlug,
+      }),
+      condition: (page) => page.fileData.slug === "index",
+    }),
+  ], // 正文内容下方的组件
   footer: Component.Footer({
     links: {
-      GitHub: "https://github.com/lllllan02", // 页脚显示的链接
+      GitHub: "https://github.com/lllllan02", 
+      Font: "https://github.com/lxgw/LxgwWenKai",
     },
   }),
 }

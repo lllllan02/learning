@@ -1,21 +1,43 @@
 ---
-title: 欢迎
+title: 欢迎来到我的知识库
 ---
 
-你好！我是 lllllan，一名后端开发。
+<div style="text-align: center; margin-bottom: 2rem;">
+  <h1>👋 你好！我是 lllllan</h1>
+  <p style="font-size: 1.2rem; color: var(--gray);">后端开发 | 终身学习者 | 记录者</p>
+</div>
 
 这里是我的个人知识库，主要用来记录平时**学习过程中的笔记**、**解决问题的思路**以及一些**琐碎的思考**。比起一个正式的博客，我更倾向于把它当作自己的“数字笔记本”。
 
-目前内容还比较零散，正在从原来的 hexo 博客慢慢同步和完善中。
+---
 
-### 这里有什么？
-- **技术笔记**：后端开发、基础架构以及各种折腾记录。
-- **学习沉淀**：书籍、文章的读书笔记。
-- **随笔思考**：一些不成体系的想法和日常记录。
+### 🔍 探索地图
 
-你可以通过左侧的文件夹树浏览内容，或者直接使用 `Cmd + K` (macOS) / `Ctrl + K` (Windows) 进行全局搜索。
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+
+> [!abstract] 知识沉淀
+> 涵盖后端开发、基础架构以及深度学习的心得与笔记。
+> [Docker](/docker/concept)
+
+> [!tip] 各种分享
+> 分享一些我觉得不错的 [[github/star|GitHub 仓库]]、动漫、书籍等。
+
+> [!quote] 随笔思考
+> 一些不成体系的想法、日常记录和复盘。待补充...
+
+</div>
 
 ---
 
-> [!info]
-> 访问地址: [blog.lllllan.cn](https://blog.lllllan.cn)
+### 💡 想搭建同样的知识库？
+
+可以参考我的 [Quartz 搭建文档](/obsidian/quartz/)。
+
+---
+
+### 💡 快速开始
+
+- **全局搜索**: 使用 `Cmd + K` (macOS) 或 `Ctrl + K` (Windows)
+- **浏览结构**: 通过左侧的文件夹树（Explorer）按目录查看
+- **最近动态**: 下方展示了最近更新的 1 篇内容
+
