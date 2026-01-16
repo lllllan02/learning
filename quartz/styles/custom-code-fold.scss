@@ -1,0 +1,52 @@
+// 代码块折叠样式
+.code-fold-container {
+  border: 1px solid var(--lightgray);
+  border-radius: 5px;
+  margin: 1rem 0;
+  background-color: var(--light);
+  overflow: hidden;
+
+  &[open] {
+    .code-fold-icon {
+      transform: rotate(90deg);
+    }
+  }
+
+  summary {
+    list-style: none;
+    outline: none;
+    cursor: pointer;
+    background-color: var(--highlight);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--codeFont);
+    font-size: 0.9rem;
+    user-select: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .code-fold-icon {
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid var(--gray);
+    border-right: 2px solid var(--gray);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  // 隐藏原有的 shiki 标题（因为它现在显示在 summary 里）
+  [data-rehype-pretty-code-title] {
+    display: none;
+  }
+
+  pre {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+}

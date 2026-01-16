@@ -68,6 +68,7 @@ const config: QuartzConfig = {
         },
         keepBackground: false,
       }), // 代码块语法高亮
+      Plugin.CustomCodeFold(), // 代码块折叠
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
       Plugin.GitHubFlavoredMarkdown(), // 支持 GitHub 风格的 Markdown 语法
       Plugin.TableOfContents(), // 解析并生成目录数据
