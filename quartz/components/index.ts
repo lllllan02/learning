@@ -11,12 +11,9 @@ import ContentMeta from "./ContentMeta"
 import Spacer from "./Spacer"
 import TableOfContents from "./TableOfContents"
 import Explorer from "./Explorer"
-import CustomExplorer from "./CustomExplorer"
 import TagList from "./TagList"
 import Graph from "./Graph"
-import CustomGraph from "./CustomGraph"
 import Backlinks from "./Backlinks"
-import CustomBacklinks from "./CustomBacklinks"
 import Search from "./Search"
 import Footer from "./Footer"
 import DesktopOnly from "./DesktopOnly"
@@ -40,12 +37,9 @@ export {
   Spacer,
   TableOfContents,
   Explorer,
-  CustomExplorer,
   TagList,
   Graph,
-  CustomGraph,
   Backlinks,
-  CustomBacklinks,
   Search,
   Footer,
   DesktopOnly,

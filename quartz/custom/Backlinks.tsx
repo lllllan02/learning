@@ -1,9 +1,9 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import style from "./styles/backlinks.scss"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
+import style from "../components/styles/backlinks.scss"
 import { resolveRelative, simplifySlug } from "../util/path"
 import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
-import OverflowListFactory from "./OverflowList"
+import OverflowListFactory from "../components/OverflowList"
 
 interface BacklinksOptions {
   hideWhenEmpty: boolean
@@ -17,7 +17,7 @@ export default ((opts?: Partial<BacklinksOptions>) => {
   const options: BacklinksOptions = { ...defaultOptions, ...opts }
   const { OverflowList, overflowListAfterDOMLoaded } = OverflowListFactory()
 
-  const CustomBacklinks: QuartzComponent = ({
+  const Backlinks: QuartzComponent = ({
     fileData,
     allFiles,
     displayClass,
@@ -52,8 +52,8 @@ export default ((opts?: Partial<BacklinksOptions>) => {
     )
   }
 
-  CustomBacklinks.css = style
-  CustomBacklinks.afterDOMLoaded = overflowListAfterDOMLoaded
+  Backlinks.css = style
+  Backlinks.afterDOMLoaded = overflowListAfterDOMLoaded
 
-  return CustomBacklinks
+  return Backlinks
 }) satisfies QuartzComponentConstructor

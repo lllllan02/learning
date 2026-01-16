@@ -1,7 +1,7 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
 // @ts-ignore
-import script from "./scripts/custom-graph.inline"
-import style from "./styles/custom-graph.scss"
+import script from "./scripts/graph.inline"
+import style from "./styles/graph.scss"
 import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
 
@@ -60,7 +60,7 @@ const defaultOptions: GraphOptions = {
 }
 
 export default ((opts?: Partial<GraphOptions>) => {
-  const CustomGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
+  const Graph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const localGraph = { ...defaultOptions.localGraph, ...opts?.localGraph }
     const globalGraph = { ...defaultOptions.globalGraph, ...opts?.globalGraph }
 
@@ -81,7 +81,6 @@ export default ((opts?: Partial<GraphOptions>) => {
             data-i18n={JSON.stringify(graphLabels)}
           ></div>
           <div class="graph-icon-container">
-            {/* ... */}
             <button class="global-graph-icon" aria-label="Global Graph">
               <svg
                 version="1.1"
@@ -144,8 +143,8 @@ export default ((opts?: Partial<GraphOptions>) => {
     )
   }
 
-  CustomGraph.css = style
-  CustomGraph.afterDOMLoaded = script
+  Graph.css = style
+  Graph.afterDOMLoaded = script
 
-  return CustomGraph
+  return Graph
 }) satisfies QuartzComponentConstructor

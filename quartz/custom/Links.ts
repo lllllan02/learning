@@ -1,4 +1,4 @@
-import { QuartzTransformerPlugin } from "../types"
+import { QuartzTransformerPlugin } from "../plugins/types"
 import {
   FullSlug,
   RelativeURL,
@@ -8,7 +8,7 @@ import {
   simplifySlug,
   splitAnchor,
   transformLink,
-} from "../../util/path"
+} from "../util/path"
 import path from "path"
 import { visit } from "unist-util-visit"
 import isAbsoluteUrl from "is-absolute-url"
@@ -32,10 +32,10 @@ const defaultOptions: Options = {
   externalLinkIcon: true,
 }
 
-export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
+export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => {
   const opts = { ...defaultOptions, ...userOpts }
   return {
-    name: "CustomLinkProcessing",
+    name: "LinkProcessing",
     htmlPlugins(ctx) {
       return [
         () => {
@@ -51,7 +51,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
             let linkCount = 0
             const backlinksMetadata: Record<SimpleSlug, string[]> = {}
             visit(tree, "element", (node, _index, _parent) => {
-              // rewrite all links
               if (
                 node.tagName === "a" &&
                 node.properties &&
@@ -85,13 +84,11 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                   })
                 }
 
-                // Check if the link has alias text
                 if (
                   node.children.length === 1 &&
                   node.children[0].type === "text" &&
                   node.children[0].value !== dest
                 ) {
-                  // Add the 'alias' class if the text content is not the same as the href
                   classes.push("alias")
                 }
                 node.properties.className = classes
@@ -100,7 +97,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                   node.properties.target = "_blank"
                 }
 
-                // don't process external links or intra-document anchors
                 const isInternal = !(
                   isAbsoluteUrl(dest, { httpOnly: false }) || dest.startsWith("#")
                 )
@@ -111,8 +107,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                     transformOptions,
                   )
 
-                  // url.resolve is considered legacy
-                  // WHATWG equivalent https://nodejs.dev/en/api/v18/url/#urlresolvefrom-to
                   const url = new URL(dest, "https://base.com/" + stripSlashes(curSlug, true))
                   const canonicalDest = url.pathname
                   let [destCanonical, _destAnchor] = splitAnchor(canonicalDest)
@@ -120,7 +114,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                     destCanonical += "index"
                   }
 
-                  // need to decodeURIComponent here as WHATWG URL percent-encodes everything
                   const full = decodeURIComponent(stripSlashes(destCanonical, true)) as FullSlug
                   const simple = simplifySlug(full)
                   outgoing.add(simple)
@@ -135,7 +128,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                   backlinksMetadata[simple].push(anchor)
                 }
 
-                // rewrite link internals if prettylinks is on
                 if (
                   opts.prettyLinks &&
                   isInternal &&
@@ -147,7 +139,6 @@ export const CustomCrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (user
                 }
               }
 
-              // transform all other resources that may use links
               if (
                 ["img", "video", "audio", "iframe"].includes(node.tagName) &&
                 node.properties &&

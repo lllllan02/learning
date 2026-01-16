@@ -1,5 +1,6 @@
 import { PageLayout, SharedLayout } from "./quartz/cfg"
 import * as Component from "./quartz/components"
+import * as Custom from "./quartz/custom"
 
 // 共享页面组件：定义在所有页面类型（内容页、列表页等）中都通用的组件
 export const sharedPageComponents: SharedLayout = {
@@ -37,13 +38,13 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() }, // 阅读模式切换开关
       ],
     }),
-    Component.CustomExplorer(),
+    Custom.Explorer(),
   ],
   right: [
     // 页面右侧栏组件
-    Component.CustomGraph(), // 交互式关系图谱
+    Custom.Graph(), // 交互式关系图谱
     Component.DesktopOnly(Component.TableOfContents()), // 文章目录（仅在桌面端显示）
-    Component.CustomBacklinks(), // 反向链接（引用了当前页面的其他页面）
+    Custom.Backlinks(), // 反向链接（引用了当前页面的其他页面）
   ],
 }
 

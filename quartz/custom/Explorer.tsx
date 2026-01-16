@@ -1,12 +1,12 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
-import style from "./styles/explorer.scss"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
+import style from "../components/styles/explorer.scss"
 
 // @ts-ignore
-import script from "./scripts/custom-explorer.inline"
+import script from "./scripts/explorer.inline"
 import { classNames } from "../util/lang"
 import { i18n } from "../i18n"
 import { FileTrieNode } from "../util/fileTrie"
-import OverflowListFactory from "./OverflowList"
+import OverflowListFactory from "../components/OverflowList"
 import { concatenateResources } from "../util/resources"
 
 type OrderEntries = "sort" | "filter" | "map"
@@ -31,7 +31,6 @@ const defaultOptions: Options = {
   },
   sortFn: (a, b) => {
     if ((!a.isFolder && !b.isFolder) || (a.isFolder && b.isFolder)) {
-      // 如果都是文件或都是文件夹，按 order 属性排序
       if (a.data?.order !== undefined && b.data?.order !== undefined) {
         return a.data.order - b.data.order
       }
@@ -42,14 +41,12 @@ const defaultOptions: Options = {
         return 1
       }
 
-      // 如果没有 order，按名称字母顺序排序
       return a.displayName.localeCompare(b.displayName, undefined, {
         numeric: true,
         sensitivity: "base",
       })
     }
 
-    // 文件夹排在文件前面
     if (!a.isFolder && b.isFolder) {
       return 1
     } else {
@@ -70,7 +67,7 @@ export default ((userOpts?: Partial<Options>) => {
   const opts: Options = { ...defaultOptions, ...userOpts }
   const { OverflowList, overflowListAfterDOMLoaded } = OverflowListFactory()
 
-  const CustomExplorer: QuartzComponent = ({ cfg, displayClass }: QuartzComponentProps) => {
+  const Explorer: QuartzComponent = ({ cfg, displayClass }: QuartzComponentProps) => {
     const id = `explorer-${numExplorers++}`
 
     return (
@@ -169,7 +166,7 @@ export default ((userOpts?: Partial<Options>) => {
     )
   }
 
-  CustomExplorer.css = style
-  CustomExplorer.afterDOMLoaded = concatenateResources(script, overflowListAfterDOMLoaded)
-  return CustomExplorer
+  Explorer.css = style
+  Explorer.afterDOMLoaded = concatenateResources(script, overflowListAfterDOMLoaded)
+  return Explorer
 }) satisfies QuartzComponentConstructor

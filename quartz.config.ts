@@ -1,6 +1,7 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
 import * as Component from "./quartz/components"
+import * as Custom from "./quartz/custom"
 
 /**
  * Quartz 4 Configuration
@@ -68,11 +69,11 @@ const config: QuartzConfig = {
         },
         keepBackground: false,
       }), // 代码块语法高亮
-      Plugin.CustomCodeFold(), // 代码块折叠
+      Custom.CodeFold(), // 代码块折叠
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: false }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
       Plugin.GitHubFlavoredMarkdown(), // 支持 GitHub 风格的 Markdown 语法
       Plugin.TableOfContents(), // 解析并生成目录数据
-      Plugin.CustomCrawlLinks({ markdownLinkResolution: "shortest" }), // 解析链接，支持 Obsidian 短链接格式
+      Custom.CrawlLinks({ markdownLinkResolution: "shortest" }), // 解析链接，支持 Obsidian 短链接格式
       Plugin.Description(), // 自动生成页面描述（用于 SEO 和预览）
       Plugin.Latex({ renderEngine: "katex" }), // 支持数学公式 (KaTeX)
     ],

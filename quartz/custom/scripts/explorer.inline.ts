@@ -30,7 +30,6 @@ function toggleExplorer(this: HTMLElement) {
   )
 
   if (!explorerCollapsed) {
-    // Stop <html> from being scrollable when mobile explorer is open
     document.documentElement.classList.add("mobile-no-scroll")
   } else {
     document.documentElement.classList.remove("mobile-no-scroll")
@@ -42,24 +41,17 @@ function toggleFolder(evt: MouseEvent) {
   const target = evt.target as MaybeHTMLElement
   if (!target) return
 
-  // Check if target was svg icon or button
   const isSvg = target.nodeName === "svg"
-
-  // corresponding <ul> element relative to clicked button/folder
   const folderContainer = (
     isSvg
-      ? // svg -> div.folder-container
-        target.parentElement
-      : // button.folder-button -> div -> div.folder-container
-        target.parentElement?.parentElement
+      ? target.parentElement
+      : target.parentElement?.parentElement
   ) as MaybeHTMLElement
   if (!folderContainer) return
   const childFolderContainer = folderContainer.nextElementSibling as MaybeHTMLElement
   if (!childFolderContainer) return
 
   childFolderContainer.classList.toggle("open")
-
-  // Collapse folder container
   const isCollapsed = !childFolderContainer.classList.contains("open")
   setFolderState(childFolderContainer, isCollapsed)
 
@@ -115,13 +107,7 @@ function createFolderNode(
     folderContainer.classList.add("active")
   }
 
-  /**
-   * 核心逻辑修改：智能判断文件夹是否有 index.md
-   * 只有当文件夹确实有关联的 markdown 数据时，才渲染为 <a> 链接
-   * 否则保持为 <button>，仅触发折叠/展开逻辑
-   */
   if (opts.folderClickBehavior === "link" && node.data) {
-    // Replace button with link for link behavior
     const button = titleContainer.querySelector(".folder-button") as HTMLElement
     const a = document.createElement("a")
     a.href = resolveRelative(currentSlug, folderPath)
@@ -134,13 +120,10 @@ function createFolderNode(
     span.textContent = node.displayName
   }
 
-  // if the saved state is collapsed or the default state is collapsed
   const isCollapsed =
     currentExplorerState.find((item) => item.path === folderPath)?.collapsed ??
     opts.folderDefaultState === "collapsed"
 
-  // if this folder is a prefix of the current path we
-  // want to open it anyways
   const simpleFolderPath = simplifySlug(folderPath)
   const folderIsPrefixOfCurrentSlug =
     simpleFolderPath === currentSlug.slice(0, simpleFolderPath.length)
@@ -174,7 +157,6 @@ async function setupExplorer(currentSlug: FullSlug) {
       mapFn: new Function("return " + (dataFns.mapFn || "undefined"))(),
     }
 
-    // Get folder state from local storage
     const storageTree = localStorage.getItem("fileTree")
     const serializedExplorerState = storageTree && opts.useSavedState ? JSON.parse(storageTree) : []
     const oldIndex = new Map<string, boolean>(
@@ -185,7 +167,6 @@ async function setupExplorer(currentSlug: FullSlug) {
     const entries = [...Object.entries(data)] as [FullSlug, ContentDetails][]
     const trie = FileTrieNode.fromEntries(entries)
 
-    // Apply functions in order
     for (const fn of opts.order) {
       switch (fn) {
         case "filter":
@@ -200,7 +181,6 @@ async function setupExplorer(currentSlug: FullSlug) {
       }
     }
 
-    // Get folder paths for state management
     const folderPaths = trie.getFolderPaths()
     currentExplorerState = folderPaths.map((path) => {
       const previousState = oldIndex.get(path)
@@ -214,7 +194,6 @@ async function setupExplorer(currentSlug: FullSlug) {
     const explorerUl = explorer.querySelector(".explorer-ul")
     if (!explorerUl) continue
 
-    // Create and insert new content
     const fragment = document.createDocumentFragment()
     for (const child of trie.children) {
       const node = child.isFolder
@@ -225,19 +204,16 @@ async function setupExplorer(currentSlug: FullSlug) {
     }
     explorerUl.insertBefore(fragment, explorerUl.firstChild)
 
-    // restore explorer scrollTop position if it exists
     const scrollTop = sessionStorage.getItem("explorerScrollTop")
     if (scrollTop) {
       explorerUl.scrollTop = parseInt(scrollTop)
     } else {
-      // try to scroll to the active element if it exists
       const activeElement = explorerUl.querySelector(".active")
       if (activeElement) {
         activeElement.scrollIntoView({ behavior: "smooth" })
       }
     }
 
-    // Set up event handlers
     const explorerButtons = explorer.getElementsByClassName(
       "explorer-toggle",
     ) as HTMLCollectionOf<HTMLElement>
@@ -246,10 +222,6 @@ async function setupExplorer(currentSlug: FullSlug) {
       window.addCleanup(() => button.removeEventListener("click", toggleExplorer))
     }
 
-    /**
-     * 核心逻辑修改：无条件绑定文件夹点击事件
-     * 确保那些因为没有 index.md 而被降级为按钮的文件夹，依然能响应点击并展开/折叠
-     */
     const folderButtons = explorer.getElementsByClassName(
       "folder-button",
     ) as HTMLCollectionOf<HTMLElement>
@@ -269,7 +241,6 @@ async function setupExplorer(currentSlug: FullSlug) {
 }
 
 document.addEventListener("prenav", async () => {
-  // save explorer scrollTop position
   const explorer = document.querySelector(".explorer-ul")
   if (!explorer) return
   sessionStorage.setItem("explorerScrollTop", explorer.scrollTop.toString())
@@ -279,7 +250,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
   const currentSlug = e.detail.url
   await setupExplorer(currentSlug)
 
-  // if mobile hamburger is visible, collapse by default
   for (const explorer of document.getElementsByClassName("explorer")) {
     const mobileExplorer = explorer.querySelector(".mobile-explorer")
     if (!mobileExplorer) return
@@ -287,8 +257,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
     if (mobileExplorer.checkVisibility()) {
       explorer.classList.add("collapsed")
       explorer.setAttribute("aria-expanded", "false")
-
-      // Allow <html> to be scrollable when mobile explorer is collapsed
       document.documentElement.classList.remove("mobile-no-scroll")
     }
 
@@ -297,8 +265,6 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
 })
 
 window.addEventListener("resize", function () {
-  // Desktop explorer opens by default, and it stays open when the window is resized
-  // to mobile screen size. Applies `no-scroll` to <html> in this edge case.
   const explorer = document.querySelector(".explorer")
   if (explorer && !explorer.classList.contains("collapsed")) {
     document.documentElement.classList.add("mobile-no-scroll")

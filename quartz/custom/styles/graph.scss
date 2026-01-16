@@ -51,7 +51,7 @@
     & > .graph-controls {
       position: absolute;
       bottom: 0.5rem;
-      right: 0.5rem; // 移动到右下角，避免遮挡
+      right: 0.5rem;
       z-index: 10;
       display: flex;
       gap: 0.5rem;
@@ -62,14 +62,14 @@
         border: 1px solid var(--lightgray);
         color: var(--dark);
         border-radius: 6px;
-        padding: 0.3rem; // 稍微调大一点点方便点击
+        padding: 0.3rem;
         display: flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         font-family: var(--bodyFont);
-        opacity: 0.6; // 默认稍微透明，减少干扰
+        opacity: 0.6;
 
         &:hover {
           background-color: var(--lightgray);
@@ -117,7 +117,7 @@
       right: calc(10vw + 1rem);
       z-index: 10000;
       display: flex;
-      flex-direction: column; // 改为垂直排列
+      flex-direction: column;
       align-items: flex-end;
       gap: 0.5rem;
 
@@ -128,8 +128,8 @@
 
       & > button,
       & > .depth-control {
-        width: 150px; // 固定宽度使两个组件一样大
-        height: 38px; // 固定高度
+        width: 150px;
+        height: 38px;
         box-sizing: border-box;
       }
 
@@ -139,7 +139,7 @@
         border: 1px solid var(--lightgray);
         color: var(--dark);
         border-radius: 6px;
-        padding: 0; // 移除 padding 使用固定宽高
+        padding: 0;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -166,7 +166,7 @@
         }
 
         & > span {
-          display: inline; // 在大图谱中显示文字
+          display: inline;
           font-weight: 500;
         }
       }

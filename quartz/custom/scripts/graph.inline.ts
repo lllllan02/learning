@@ -1,4 +1,8 @@
-import type { ContentDetails } from "../../plugins/emitters/contentIndex"
+import { Graphics, Application, Container, Circle, Text } from "pixi.js"
+import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
+import { registerEscapeHandler, removeAllChildren } from "../../components/scripts/util"
+import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
+import { D3Config } from "../Graph"
 import {
   SimulationNodeDatum,
   SimulationLinkDatum,
@@ -14,11 +18,7 @@ import {
   drag,
   zoom,
 } from "d3"
-import { Text, Graphics, Application, Container, Circle } from "pixi.js"
-import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
-import { registerEscapeHandler, removeAllChildren } from "./util"
-import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
-import { D3Config } from "../CustomGraph"
+import { ContentDetails } from "../../plugins/emitters/contentIndex"
 
 type GraphicsInfo = {
   color: string
@@ -133,7 +133,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   let hasMore = false
   if (depth >= 0) {
     while (depth >= 0 && wl.length > 0) {
-      // compute neighbours
       const cur = wl.shift()!
       if (cur === "__SENTINEL") {
         depth--
@@ -144,13 +143,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         if (neighbourhood.has(cur)) continue
         neighbourhood.add(cur)
         
-        // 找出所有未访问过的邻居，并去重
         const neighbours = links
           .filter((l) => l.source === cur || l.target === cur)
           .map((l) => (l.source === cur ? l.target : l.source))
           .filter((n) => !neighbourhood.has(n))
         
-        // 进一步确保 wl 中不会有大量重复节点
         for (const n of neighbours) {
           if (!wl.includes(n)) {
             wl.push(n)
@@ -158,7 +155,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         }
       }
     }
-    // hasMore 准确判断：队列中是否还有任何不在当前邻域内的真实节点
     hasMore = wl.some((item) => item !== "__SENTINEL" && !neighbourhood.has(item))
   } else {
     validLinks.forEach((id) => neighbourhood.add(id))
@@ -186,7 +182,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const width = graph.offsetWidth
   const height = Math.max(graph.offsetHeight, 250)
 
-  // we virtualize the simulation and use pixi to actually render it
   const simulation: Simulation<NodeData, LinkData> = forceSimulation<NodeData>(graphData.nodes)
     .force("charge", forceManyBody().strength(-100 * repelForce))
     .force("center", forceCenter().strength(centerForce))
@@ -196,7 +191,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const radius = (Math.min(width, height) / 2) * 0.8
   if (enableRadial) simulation.force("radial", forceRadial(radius).strength(0.2))
 
-  // precompute style prop strings as pixi doesn't support css variables
   const cssVars = [
     "--secondary",
     "--tertiary",
@@ -215,7 +209,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     {} as Record<(typeof cssVars)[number], string>,
   )
 
-  // calculate color
   const color = (d: NodeData) => {
     const isCurrent = d.id === slug
     if (isCurrent) {
@@ -231,7 +224,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const numLinks = graphData.links.filter(
       (l) => l.source.id === d.id || l.target.id === d.id,
     ).length
-    return 6 + Math.sqrt(numLinks) // 从 2 调大到 6，让“点”显著变大
+    return 6 + Math.sqrt(numLinks)
   }
 
   let hoveredNodeId: string | null = null
@@ -277,9 +270,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
     for (const l of linkRenderData) {
       let alpha = 1
-
-      // if we are hovering over a node, we want to highlight the immediate neighbours
-      // with full alpha and the rest with default alpha
       if (hoveredNodeId) {
         alpha = l.active ? 1 : 0.2
       }
@@ -344,8 +334,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const tweenGroup = new TweenGroup()
     for (const n of nodeRenderData) {
       let alpha = 1
-
-      // if we are hovering over a node, we want to highlight the immediate neighbours
       if (hoveredNodeId !== null && focusOnHover) {
         alpha = n.active ? 1 : 0.2
       }
@@ -389,7 +377,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const stage = app.stage
   stage.interactive = false
 
-  // 动态创建或获取控制按钮
   let controls = graph.parentElement?.querySelector(".graph-controls") as HTMLElement
   const isLocalExpanded = graph.classList.contains("local-graph-container")
 
@@ -426,11 +413,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const cfg = JSON.parse(graph.dataset["cfg"]!) as D3Config
 
   if (toggleTagsBtn) {
-    // 移除旧监听器
     const newBtn = toggleTagsBtn.cloneNode(true) as HTMLButtonElement
     toggleTagsBtn.parentNode?.replaceChild(newBtn, toggleTagsBtn)
-    
-    // 初始化状态
     newBtn.classList.toggle("active", cfg.showTags)
 
     newBtn.addEventListener("click", async (e) => {
@@ -439,7 +423,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       graph.dataset["cfg"] = JSON.stringify(cfg)
       newBtn.classList.toggle("active", cfg.showTags)
       
-      // 重新渲染图谱以应用节点过滤
       const result = await renderGraph(graph, fullSlug)
       if (graph.classList.contains("global-graph-container")) {
         globalGraphCleanups.push(result)
@@ -450,16 +433,12 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   if (depthDecBtn && depthIncBtn && depthDisplay) {
-    // 移除旧监听器
     const newDecBtn = depthDecBtn.cloneNode(true) as HTMLButtonElement
     const newIncBtn = depthIncBtn.cloneNode(true) as HTMLButtonElement
     depthDecBtn.parentNode?.replaceChild(newDecBtn, depthDecBtn)
     depthIncBtn.parentNode?.replaceChild(newIncBtn, depthIncBtn)
 
-    // 初始化显示
     depthDisplay.textContent = `${i18n.depth}: ${cfg.depth === -1 ? i18n.all : cfg.depth}`
-
-    // 初始按钮状态
     newDecBtn.style.opacity = (cfg.depth <= 1 && cfg.depth !== -1) ? "0.3" : "1"
     newDecBtn.style.cursor = (cfg.depth <= 1 && cfg.depth !== -1) ? "not-allowed" : "pointer"
     newIncBtn.style.opacity = !hasMore ? "0.3" : "1"
@@ -480,7 +459,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         localGraphCleanups = [result]
       }
 
-      // 更新按钮视觉状态
       newDecBtn.style.opacity = (newDepth <= 1 && newDepth !== -1) ? "0.3" : "1"
       newDecBtn.style.cursor = (newDepth <= 1 && newDepth !== -1) ? "not-allowed" : "pointer"
       newIncBtn.style.opacity = !result.hasMore ? "0.3" : "1"
@@ -617,7 +595,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           event.subject.fy = null
           dragging = false
 
-          // if the time between mousedown and mouseup is short, we consider it a click
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
             const targ = resolveRelative(fullSlug, node.id)
@@ -647,7 +624,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           stage.scale.set(transform.k, transform.k)
           stage.position.set(transform.x, transform.y)
 
-          // zoom adjusts opacity of labels too
           const scale = transform.k * opacityScale
           let scaleOpacity = Math.max(scale - 1, 0)
           const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
@@ -716,7 +692,6 @@ function cleanupLocalGraphs() {
 function cleanupGlobalGraphs() {
   for (const item of globalGraphCleanups) {
     item.cleanup()
-    // 同时清理全局 Map 中的对应项
     for (const [el, res] of graphResults.entries()) {
       if (res === item) graphResults.delete(el)
     }
