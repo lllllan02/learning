@@ -1,9 +1,9 @@
 ---
-title: 代码块折叠定制
+title: 折叠代码块
 tags:
   - Quartz
   - Markdown
-  - 代码折叠
+  - 代码块
 date: 2026-01-16
 order: 4
 ---

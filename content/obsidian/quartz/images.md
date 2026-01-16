@@ -1,9 +1,8 @@
 ---
-title: 图片布局优化
+title: 图片居中
 tags:
   - Quartz
-  - CSS
-  - 布局
+  - 图片
 date: 2026-01-16
 order: 6
 ---
