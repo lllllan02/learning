@@ -25,13 +25,25 @@ img {
   display: block;   // 将图片转换为块级元素
   margin: 0 auto;   // 水平居中
 }
+
+// 使 Mermaid 图表居中
+pre:has(> code.mermaid) {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
 ```
 
 ### 说明
 
-1.  **`display: block`**: 默认情况下图片是行内元素（inline），不支持通过 `margin: 0 auto` 居中。将其改为 `block` 后即可生效。
-2.  **`margin: 0 auto`**: 这是 CSS 中经典的块级元素水平居中方法，其中 `0` 表示上下边距，`auto` 表示左右边距自动分配，从而实现居中。
-3.  **全局生效**: 该样式会作用于 `article` 标签内的所有图片，确保博客风格统一。
+1.  **图片居中**:
+    - **`display: block`**: 默认情况下图片是行内元素（inline），不支持通过 `margin: 0 auto` 居中。将其改为 `block` 后即可生效。
+    - **`margin: 0 auto`**: 这是 CSS 中经典的块级元素水平居中方法，其中 `0` 表示上下边距，`auto` 表示左右边距自动分配，从而实现居中。
+2.  **Mermaid 居中**:
+    - **`pre:has(> code.mermaid)`**: 选中包含 Mermaid 代码块的容器。
+    - **`display: flex` & `justify-content: center`**: 使用 Flex 布局实现图表水平居中。
+    - **`background: transparent`**: 去掉图表后的默认代码块背景，使图表与页面背景融合。
+3.  **全局生效**: 这些样式会作用于所有页面，确保博客风格统一。
 
 ## 局部调整（备选方案）
 

@@ -36,38 +36,47 @@ img {
   margin: 0 auto;
 }
 
+// 使 Mermaid 图表居中
+pre:has(> code.mermaid) {
+  display: flex;
+  justify-content: center;
+  background: transparent;
+}
+
 // 首页美化样式
 body[data-slug="index"] {
+  // 隐藏首页默认标题
   .article-title {
-    display: none; // 隐藏首页默认标题
+    display: none; 
   }
 
+  // 隐藏首页日期等元数据
   .content-meta {
-    display: none; // 隐藏首页日期等元数据
+    display: none; 
   }
-}
 
-// 调整 Callout 样式
-.callout {
-  margin: 1rem 0;
-  border-radius: 8px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  // 调整 Callout 样式
+  .callout {
+    margin: 1rem 0;
+    border-radius: 8px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    
+    .callout-title {
+      font-weight: 600;
+    }
   }
-  
-  .callout-title {
-    font-weight: 600;
-  }
-}
 
-// 最近更新组件样式优化
-.recent-notes {
-  margin-top: 2rem;
-  
-  & > h3 {
-    margin-bottom: 1rem;
+  // 最近更新组件样式优化
+  .recent-notes {
+    margin-top: 2rem;
+    
+    & > h3 {
+      margin-bottom: 1rem;
+    }
   }
 }
