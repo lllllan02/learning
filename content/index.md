@@ -17,10 +17,10 @@ title: 欢迎来到我的知识库
 
 > [!abstract] 知识沉淀
 > 涵盖后端开发、基础架构以及深度学习的心得与笔记。
-> [Docker](/docker/concept)
+> [[/docker/concept/|Docker]]
 
 > [!tip] 各种分享
-> 分享一些我觉得不错的 [[github/star|GitHub 仓库]]、动漫、书籍等。
+> 分享一些我觉得不错的 [[/github/star/|GitHub 仓库]]、动漫、书籍等。
 
 > [!quote] 随笔思考
 > 一些不成体系的想法、日常记录和复盘。待补充...
@@ -31,7 +31,7 @@ title: 欢迎来到我的知识库
 
 ### 💡 想搭建同样的知识库？
 
-可以参考我的 [Quartz 搭建文档](/obsidian/quartz/)。
+可以参考我的 [[/obsidian/quartz/|Quartz 搭建文档]]。
 
 ---
 
