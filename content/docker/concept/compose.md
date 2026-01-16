@@ -17,7 +17,7 @@ order: 4
 
 示例: [Example to-do List Application](https://github.com/dockersamples/todo-list-app)
 
-```yaml
+```yaml fold="docker-compose.yml"
 services:
   app:
     image: node:18-alpine
