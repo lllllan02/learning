@@ -7,7 +7,7 @@ date: 2026-01-15
 order: 2
 ---
 
-[什么是镜像 | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/)。
+> [What is an image? | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-an-image/)
 
 ==镜像是一个包含了运行容器所需所有文件的标准化包==。好比做一道菜的菜谱、一栋建筑的图纸、一个游戏的安装包，镜像就是搭建出容器的模板。
 

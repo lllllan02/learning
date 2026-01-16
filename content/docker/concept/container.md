@@ -7,7 +7,7 @@ date: 2026-01-15
 order: 1
 ---
 
-[什么是容器 | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/)。
+> [What is a container? | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-container/)
 
 简单来说，==容器是针对你应用中每个组件的独立进程==。
 

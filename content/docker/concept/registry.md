@@ -7,7 +7,7 @@ date:
 order: 3
 ---
 
-[什么是仓库 | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/)。
+>[What is a registry? | Docker 官方文档](https://docs.docker.com/get-started/docker-concepts/the-basics/what-is-a-registry/)
 
 ## 什么是 Registry
 
