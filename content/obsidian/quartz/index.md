@@ -6,6 +6,8 @@ tags:
 date: 2026-01-15
 ---
 
+[Quartz](https://quartz.jzhao.xyz/) 是一个快速、可高度定制且开源的静态站点生成器，旨在将你的 [Obsidian](https://obsidian.md/) 笔记发布到网络上。如果你是第一次使用，可以参考官方文档进行部署。
+
 欢迎来到 Quartz 4 定制说明章节。这里记录了为了让 Quartz 博客更贴近 Obsidian 原生体验，以及提升交互效率所做的深度优化。
 
 ## 核心功能优化
