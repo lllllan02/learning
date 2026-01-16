@@ -7,11 +7,6 @@
   overflow-y: hidden;
   box-sizing: border-box;
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
-  
   .callout-title {
     // 标题的上下 padding 统一使用全局间距变量，确保视觉一致
     padding: var(--article-margin) 0 !important;
