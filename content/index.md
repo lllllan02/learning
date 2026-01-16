@@ -29,6 +29,16 @@ title: 欢迎来到我的知识库
 
 ---
 
+### 🕒 历史足迹
+
+我过去的一些博客和记录：
+- [2025 年博客](https://blog2025.lllllan.cn/)
+- [2022 年博客](http://blog2022.lllllan.cn/)
+- [2022 年笔记](http://notes.lllllan.cn/)
+- [2022 年 Fahaxiki 训练实录](http://training.lllllan.cn/)
+
+---
+
 ### 💡 想搭建同样的知识库？
 
 可以参考我的 [[/obsidian/quartz/|Quartz 搭建文档]]。
