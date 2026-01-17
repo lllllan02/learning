@@ -1,6 +1,6 @@
 // @ts-ignore
-import imageZoomScript from "./scripts/imageZoom.inline"
-import { QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
+import imageZoomScript from "./imageZoom.inline"
+import { QuartzComponentConstructor, QuartzComponentProps } from "../../components/types"
 
 export default (() => {
   function ImageZoom(_props: QuartzComponentProps) {

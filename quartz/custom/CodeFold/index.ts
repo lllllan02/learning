@@ -1,8 +1,8 @@
-import { QuartzTransformerPlugin } from "../plugins/types"
+import { QuartzTransformerPlugin } from "../../plugins/types"
 import { Root } from "mdast"
 import { visit } from "unist-util-visit"
 // @ts-ignore
-import style from "./styles/code-fold.scss"
+import style from "./code-fold.scss"
 
 export const CodeFold: QuartzTransformerPlugin = () => {
   return {

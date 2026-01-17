@@ -22,7 +22,7 @@ order: 7
 该功能基于 [medium-zoom](https://github.com/francoischalifour/medium-zoom) 库实现。
 
 ### 1. 组件脚本
-我们在 `quartz/custom/scripts/imageZoom.inline.ts` 中实现了自动化绑定逻辑。
+我们在 `quartz/custom/ImageZoom/imageZoom.inline.ts` 中实现了自动化绑定逻辑。
 
 ```typescript
 document.addEventListener("nav", async () => {
@@ -76,8 +76,7 @@ export const sharedPageComponents: SharedLayout = {
 
 请将以下文件保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **脚本文件**：[`scripts/imageZoom.inline.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/scripts/imageZoom.inline.ts) (负责图片放大的核心逻辑)
-2.  **显示组件**：[`ImageZoom.tsx`](https://github.com/lllllan02/blog/blob/main/quartz/custom/ImageZoom.tsx) (负责将脚本注入页面)
+1.  **组件文件夹**：[`ImageZoom/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/ImageZoom)
 3.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (用于导出自定义组件)
 
 ### 启用组件

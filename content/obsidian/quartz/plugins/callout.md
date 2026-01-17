@@ -147,8 +147,7 @@ order: 6
 
 请确保以下文件已保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **转换插件**：[`Callout.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Callout.ts)
-2.  **独立样式**：[`styles/callout.scss`](https://github.com/lllllan02/blog/blob/main/quartz/custom/styles/callout.scss)
+1.  **插件文件夹**：[`Callout/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Callout)
 3.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则直接添加导出语句)
 
 ### 启用插件

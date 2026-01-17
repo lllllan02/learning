@@ -1,9 +1,9 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
-import style from "../components/styles/backlinks.scss"
-import { resolveRelative, simplifySlug } from "../util/path"
-import { i18n } from "../i18n"
-import { classNames } from "../util/lang"
-import OverflowListFactory from "../components/OverflowList"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../../components/types"
+import style from "../../components/styles/backlinks.scss"
+import { resolveRelative, simplifySlug } from "../../util/path"
+import { i18n } from "../../i18n"
+import { classNames } from "../../util/lang"
+import OverflowListFactory from "../../components/OverflowList"
 
 interface BacklinksOptions {
   hideWhenEmpty: boolean

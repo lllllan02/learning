@@ -66,8 +66,7 @@ const api_key = "secret_key"
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **插件核心**：[`CodeFold.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/CodeFold.ts)
-2.  **视觉样式**：[`styles/code-fold.scss`](https://github.com/lllllan02/blog/blob/main/quartz/custom/styles/code-fold.scss)
+1.  **插件文件夹**：[`CodeFold/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/CodeFold)
 3.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则无需重复下载)
 
 ### 启用插件

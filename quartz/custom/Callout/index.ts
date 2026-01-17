@@ -1,9 +1,9 @@
-import { QuartzTransformerPlugin } from "../plugins/types"
-import { capitalize } from "../util/lang"
+import { QuartzTransformerPlugin } from "../../plugins/types"
+import { capitalize } from "../../util/lang"
 // @ts-ignore
-import calloutScript from "../components/scripts/callout.inline"
+import calloutScript from "../../components/scripts/callout.inline"
 // @ts-ignore
-import calloutStyle from "./styles/callout.scss"
+import calloutStyle from "./callout.scss"
 
 export interface Options {
   renderDefaultTitles: boolean

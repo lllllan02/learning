@@ -12,7 +12,7 @@ order: 8
 
 ## 插件实现
 
-插件存放在 `quartz/custom/Pangu.ts`。它利用 `mdast-util-find-and-replace` 在 Markdown 解析阶段对文本节点进行正则替换。
+插件存放在 `quartz/custom/Pangu/index.ts`。它利用 `mdast-util-find-and-replace` 在 Markdown 解析阶段对文本节点进行正则替换。
 
 ```typescript
 import { QuartzTransformerPlugin } from "../plugins/types"
@@ -50,7 +50,7 @@ export const Pangu: QuartzTransformerPlugin = () => {
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **插件核心**：[`Pangu.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Pangu.ts)
+1.  **插件文件夹**：[`Pangu/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Pangu)
 2.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则无需重复下载)
 
 ### 启用插件

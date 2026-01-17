@@ -29,8 +29,8 @@ order: 3
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **转换插件**：[`Links.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Links.ts) (负责记录锚点元数据)
-2.  **显示组件**：[`Backlinks.tsx`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Backlinks.tsx) (负责精准拼接链接)
+1.  **转换插件文件夹**：[`Links/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Links)
+2.  **显示组件文件夹**：[`Backlinks/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Backlinks)
 3.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则无需重复下载)
 
 ### 启用插件

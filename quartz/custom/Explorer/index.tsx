@@ -1,13 +1,13 @@
-import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../components/types"
-import style from "./styles/explorer.scss"
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "../../components/types"
+import style from "./explorer.scss"
 
 // @ts-ignore
-import script from "./scripts/explorer.inline"
-import { classNames } from "../util/lang"
-import { i18n } from "../i18n"
-import { FileTrieNode } from "../util/fileTrie"
-import OverflowListFactory from "../components/OverflowList"
-import { concatenateResources } from "../util/resources"
+import script from "./explorer.inline"
+import { classNames } from "../../util/lang"
+import { i18n } from "../../i18n"
+import { FileTrieNode } from "../../util/fileTrie"
+import OverflowListFactory from "../../components/OverflowList"
+import { concatenateResources } from "../../util/resources"
 
 type OrderEntries = "sort" | "filter" | "map"
 

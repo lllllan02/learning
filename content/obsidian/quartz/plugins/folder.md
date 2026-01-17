@@ -47,9 +47,7 @@ order: 1  # 数值越小越靠前
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **组件核心**：[`Explorer.tsx`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Explorer.tsx)
-2.  **交互脚本**：[`scripts/explorer.inline.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/scripts/explorer.inline.ts)
-3.  **组件样式**：[`styles/explorer.scss`](https://github.com/lllllan02/blog/blob/main/quartz/custom/styles/explorer.scss)
+1.  **组件文件夹**：[`Explorer/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Explorer)
 4.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则无需重复下载)
 
 ### 启用插件

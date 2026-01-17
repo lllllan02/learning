@@ -21,7 +21,7 @@ order: 4
 
 ### 1. 实现自定义插件
 
-创建了 `quartz/custom/Highlight.ts`，主要做了两点改进：
+创建了 `quartz/custom/Highlight/index.ts`，主要做了两点改进：
 - **使用 MDAST 节点**：将高亮内容解析为具有 `children` 的 `textHighlight` 节点，而非纯 HTML。这样内部的链接语法可以被保留并由后续插件处理。
 - **类型断言**：通过 `as any` 解决了自定义节点类型在 TypeScript 中的检查问题。
 
@@ -59,7 +59,7 @@ transformers: [
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **插件核心**：[`Highlight.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Highlight.ts)
+1.  **插件文件夹**：[`Highlight/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Highlight)
 2.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (请确保已在其中导出 `Highlight`)
 
 ### 启用插件

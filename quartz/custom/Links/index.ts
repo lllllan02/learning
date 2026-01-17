@@ -1,4 +1,4 @@
-import { QuartzTransformerPlugin } from "../plugins/types"
+import { QuartzTransformerPlugin } from "../../plugins/types"
 import {
   FullSlug,
   RelativeURL,
@@ -8,7 +8,7 @@ import {
   simplifySlug,
   splitAnchor,
   transformLink,
-} from "../util/path"
+} from "../../util/path"
 import path from "path"
 import { visit } from "unist-util-visit"
 import isAbsoluteUrl from "is-absolute-url"

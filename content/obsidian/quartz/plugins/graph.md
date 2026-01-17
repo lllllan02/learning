@@ -28,9 +28,7 @@ order: 2
 
 请将以下文件下载并保存至项目的 `quartz/custom/` 对应位置：
 
-1.  **组件核心**：[`Graph.tsx`](https://github.com/lllllan02/blog/blob/main/quartz/custom/Graph.tsx)
-2.  **交互算法**：[`scripts/graph.inline.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/scripts/graph.inline.ts)
-3.  **视觉样式**：[`styles/graph.scss`](https://github.com/lllllan02/blog/blob/main/quartz/custom/styles/graph.scss)
+1.  **组件文件夹**：[`Graph/`](https://github.com/lllllan02/blog/tree/main/quartz/custom/Graph)
 4.  **统一入口**：[`index.ts`](https://github.com/lllllan02/blog/blob/main/quartz/custom/index.ts) (若已存在则无需重复下载)
 
 ### 启用插件

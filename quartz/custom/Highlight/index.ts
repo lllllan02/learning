@@ -1,4 +1,4 @@
-import { QuartzTransformerPlugin } from "../plugins/types"
+import { QuartzTransformerPlugin } from "../../plugins/types"
 import { Root } from "mdast"
 import { findAndReplace as mdastFindReplace } from "mdast-util-find-and-replace"
 
