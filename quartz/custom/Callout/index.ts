@@ -85,22 +85,33 @@ export const Callout: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => 
           const panguReplace = "$1 $2"
           const applyPangu = (text: string) => text.replace(panguRegex1, panguReplace).replace(panguRegex2, panguReplace)
 
-          const displayTitle = (title?.trim() || (opts.renderDefaultTitles ? capitalize(calloutType === "custom" ? "Note" : type) : ""))
-            .replace(wikilinkRegex, (_match: string, fp: string | undefined, header: string | undefined, alias: string | undefined) => {
-              const dest = `${fp ?? ""}${header ?? ""}`
-              const display = (alias ?? "").replace(/^\\?\|/, "") || fp || header || ""
-              return `<a href="${dest}">${applyPangu(display)}</a>`
-            })
+          const displayTitle = (
+            title?.trim() ||
+            (opts.renderDefaultTitles ? capitalize(calloutType === "custom" ? "Note" : type) : "")
+          )
+            .replace(
+              wikilinkRegex,
+              (_match: string, fp: string | undefined, header: string | undefined, alias: string | undefined) => {
+                const dest = `${fp ?? ""}${header ?? ""}`
+                const display = (alias ?? "").replace(/^\\?\|/, "") || fp || header || ""
+                return `<a href="${dest}">${applyPangu(display)}</a>`
+              },
+            )
             .replace(mdLinkRegex, (_match: string, display: string, dest: string) => {
               return `<a href="${dest}">${applyPangu(display)}</a>`
             })
-            .split(/(<a [^>]+>|<\/a>)/)
+            .replace(/`([^`]+)`/g, "<code>$1</code>")
+            .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+            .replace(/\*(.+?)\*/g, "<em>$1</em>")
+            .replace(/~~(.+?)~~/g, "<del>$1</del>")
+            .replace(/==([^=]+)==/g, '<span class="text-highlight">$1</span>')
+            .split(/(<[^>]+>)/)
             .map((part: string) => (part.startsWith("<") ? part : applyPangu(part)))
             .join("")
-            .replace(/([\u4e00-\u9fa5])(<a [^>]+>)([a-zA-Z0-9])/g, "$1 $2$3")
-            .replace(/([a-zA-Z0-9])(<a [^>]+>)([\u4e00-\u9fa5])/g, "$1 $2$3")
-            .replace(/([a-zA-Z0-9])(<\/a>)([\u4e00-\u9fa5])/g, "$1$2 $3")
-            .replace(/([\u4e00-\u9fa5])(<\/a>)([a-zA-Z0-9])/g, "$1$2 $3")
+            .replace(/([\u4e00-\u9fa5])(<[^>]+>)([a-zA-Z0-9])/g, "$1 $2$3")
+            .replace(/([a-zA-Z0-9])(<[^>]+>)([\u4e00-\u9fa5])/g, "$1 $2$3")
+            .replace(/([a-zA-Z0-9])(<\/[^>]+>)([\u4e00-\u9fa5])/g, "$1$2 $3")
+            .replace(/([\u4e00-\u9fa5])(<\/[^>]+>)([a-zA-Z0-9])/g, "$1$2 $3")
           const collapseIcon = isCollapsible ? `<div class="fold-callout-icon"></div>` : ""
           
           const classNames = ["callout", calloutType]
