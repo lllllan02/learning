@@ -24,3 +24,7 @@ order: 2
 ## [[/obsidian/quartz/styles/image-row|图片并排显示]]
 
 记录了通过 `<div class="image-row">` 实现图片横向排版的实现方案。
+
+## [[/obsidian/quartz/styles/tables|表格自动最大宽度]]
+
+配置了表格自动撑满容器宽度的样式，解决了默认样式下表格宽度受限的问题。

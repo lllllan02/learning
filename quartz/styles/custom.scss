@@ -125,3 +125,14 @@ body[data-slug="index"] {
     }
   }
 }
+
+// 表格样式优化：自动铺满最大宽度
+.table-container {
+  & > table {
+    width: 100%;      // 强制表格宽度为 100%
+    margin-left: 0;   // 移除默认边距
+    margin-right: 0;  // 移除默认边距
+    display: table;   // 确保表格布局模式正确
+    table-layout: auto; // 默认根据内容调整列宽，如需均匀分布可改为 fixed
+  }
+}
