@@ -1,5 +1,5 @@
 ---
-title: 关系图谱优化
+title: 自定义关系图谱插件
 draft: false
 tags:
   - Obsidian

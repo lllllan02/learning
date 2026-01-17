@@ -1,11 +1,11 @@
 ---
-title: 折叠代码块
+title: 自定义折叠代码块插件
 tags:
   - Quartz
   - Markdown
   - 代码块
 date: 2026-01-16
-order: 4
+order: 5
 ---
 
 ## 功能介绍

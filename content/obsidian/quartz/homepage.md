@@ -4,7 +4,7 @@ tags:
   - Quartz
   - 首页
 date: 2026-01-16
-order: 7
+order: 9
 ---
 
 本文详细记录了对 Quartz 首页进行的深度美化过程，包括 Markdown 内容重构、布局组件的条件渲染以及 CSS 样式的精细调节。

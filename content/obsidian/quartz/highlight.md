@@ -1,11 +1,11 @@
 ---
-title: 修复高亮与链接冲突
+title: 自定义高亮插件
 tags:
   - Quartz
   - Plugin
   - Markdown
 date: 2026-01-16
-order: 5
+order: 4
 ---
 
 在 Quartz 默认的实现中，当高亮（`==text==`）与维基链接（`[[link]]`）同时存在时（例如 `==[[link]]==`），高亮效果往往会失效，或者链接无法被正确解析。

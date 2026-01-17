@@ -1,11 +1,11 @@
 ---
-title: 代码高亮使用
+title: 代码高亮使用指南
 tags:
   - Quartz
   - Markdown
   - 代码高亮
 date: 2026-01-14
-order: 7
+order: 13
 ---
 
 ## 标准代码框

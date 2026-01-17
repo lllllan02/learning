@@ -1,5 +1,5 @@
 ---
-title: 图片点击放大
+title: 自定义图片放大插件
 tags:
   - Quartz
   - 图片
