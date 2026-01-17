@@ -1,5 +1,5 @@
 ---
-title: 自定义文件树插件
+title: 文件树插件
 tags:
   - Quartz
   - 文件夹

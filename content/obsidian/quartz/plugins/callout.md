@@ -1,5 +1,5 @@
 ---
-title: 自定义标注插件
+title: 标注插件
 tags:
   - Quartz
   - Markdown

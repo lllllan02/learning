@@ -1,5 +1,5 @@
 ---
-title: 自定义折叠代码块插件
+title: 折叠代码块插件
 tags:
   - Quartz
   - Markdown

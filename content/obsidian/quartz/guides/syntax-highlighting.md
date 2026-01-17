@@ -110,3 +110,21 @@ const [age, setAge] = useState(50);
 const [name, setName] = useState('Taylor');
 ```
 ````
+
+## [[/obsidian/quartz/plugins/code-folding|折叠代码块]]
+
+为了提升长代码的可读性，我们引入了代码块折叠功能。你可以通过在代码块语言标识后添加 `fold` 关键字来实现。
+
+### 使用方法
+
+````markdown
+```ts fold title="可折叠的代码块"
+// 这里的代码默认会被折叠
+console.log("Hello, Quartz!");
+```
+````
+
+```ts fold title="可折叠的代码块"
+// 这里的代码默认会被折叠
+console.log("Hello, Quartz!");
+```

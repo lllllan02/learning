@@ -1,5 +1,5 @@
 ---
-title: 自定义高亮插件
+title: 高亮插件
 tags:
   - Quartz
   - Plugin

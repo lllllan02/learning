@@ -9,7 +9,7 @@ order: 9
 
 本文详细记录了对 Quartz 首页进行的深度美化过程，包括 Markdown 内容重构、布局组件的条件渲染以及 CSS 样式的精细调节。
 
-## 1. 首页 Markdown 内容重构 (`index.md`)
+## 首页内容重构 (`index.md`)
 
 我们摒弃了传统的列表式首页，改用 **Hero + Grid 导航** 的结构。
 
@@ -42,7 +42,7 @@ order: 9
 </div>
 ```
 
-## 2. 布局组件的条件渲染 (`quartz.layout.ts`)
+## 布局组件的条件渲染 (`quartz.layout.ts`)
 
 为了让首页具备动态感，我们在正文下方引入了“最近更新”组件，并通过 `ConditionalRender` 确保其仅在首页展示。
 
@@ -72,7 +72,7 @@ export const sharedPageComponents: SharedLayout = {
 > [!warning] 类型提示
 > Quartz 路径使用 Nominal Typing。配置 `linkToMore` 时，必须使用 `as SimpleSlug` 进行类型断言，否则会报“string 不能赋值给 SimpleSlug”的错误。
 
-## 3. 全局页脚优化
+## 全局页脚优化
 
 将站点信息（如 GitHub 链接、字体声明）从 Markdown 首页抽离，放入全局页脚，使所有页面保持一致。
 
@@ -86,7 +86,7 @@ footer: Component.Footer({
 }),
 ```
 
-## 4. 样式微调 (`custom.scss`)
+## 样式微调 (`custom.scss`)
 
 通过 `custom.scss` 解决首页的视觉冗余，并增强交互体验。
 

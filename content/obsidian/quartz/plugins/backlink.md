@@ -1,5 +1,5 @@
 ---
-title: 自定义反向链接插件
+title: 反向链接插件
 tags:
   - Quartz
   - 反向链接

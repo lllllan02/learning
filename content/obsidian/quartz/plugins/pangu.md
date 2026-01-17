@@ -1,5 +1,5 @@
 ---
-title: 自定义中英文空格插件
+title: 中英文自动空格插件
 tags:
   - Quartz
   - Plugin
