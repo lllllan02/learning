@@ -1,0 +1,30 @@
+@use "../../styles/variables.scss" as *;
+@forward "../../components/styles/explorer.scss";
+
+.explorer-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  & > #explorer-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+
+    & > button {
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--darkgray);
+
+      &:hover {
+        color: var(--secondary);
+      }
+    }
+  }
+}

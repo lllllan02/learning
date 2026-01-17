@@ -237,6 +237,44 @@ async function setupExplorer(currentSlug: FullSlug) {
       icon.addEventListener("click", toggleFolder)
       window.addCleanup(() => icon.removeEventListener("click", toggleFolder))
     }
+
+    // Set up expand/collapse all handlers
+    const expandLayoutButton = explorer.querySelector("#explorer-expand-layout")
+    if (expandLayoutButton) {
+      const expandIcon = expandLayoutButton.querySelector(".explorer-expand-icon") as HTMLElement
+      const collapseIcon = expandLayoutButton.querySelector(".explorer-collapse-icon") as HTMLElement
+
+      expandLayoutButton.addEventListener("click", () => {
+        const folderOuters = Array.from(explorer.querySelectorAll(".folder-outer"))
+        const allOpen = folderOuters.every((outer) => outer.classList.contains("open"))
+
+        if (allOpen) {
+          // Collapse all
+          folderOuters.forEach((outer) => outer.classList.remove("open"))
+          currentExplorerState.forEach((state) => (state.collapsed = true))
+          expandIcon.style.display = "block"
+          collapseIcon.style.display = "none"
+        } else {
+          // Expand all
+          folderOuters.forEach((outer) => outer.classList.add("open"))
+          currentExplorerState.forEach((state) => (state.collapsed = false))
+          expandIcon.style.display = "none"
+          collapseIcon.style.display = "block"
+        }
+        localStorage.setItem("fileTree", JSON.stringify(currentExplorerState))
+      })
+
+      // 初始化图标状态
+      const folderOuters = Array.from(explorer.querySelectorAll(".folder-outer"))
+      const allOpen = folderOuters.length > 0 && folderOuters.every((outer) => outer.classList.contains("open"))
+      if (allOpen) {
+        expandIcon.style.display = "none"
+        collapseIcon.style.display = "block"
+      } else {
+        expandIcon.style.display = "block"
+        collapseIcon.style.display = "none"
+      }
+    }
   }
 }
 
