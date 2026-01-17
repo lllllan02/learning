@@ -1,26 +1,36 @@
 @use "./base.scss";
 
+:root {
+  --article-font-size: 1.2rem;
+  --article-line-height: 2rem;
+  --article-margin: 1rem;
+  --article-h1-size: 1.8rem;
+  --article-h2-size: 1.5rem;
+  --article-h3-size: 1.35rem;
+  --article-h4-size: 1.25rem;
+}
+
 // 自定义字号及排版设置
 article {
-  font-size: 1.2rem;
-  line-height: 2rem;
+  font-size: var(--article-font-size);
+  line-height: var(--article-line-height);
 
   // 标题层级优化
-  h1 { font-size: 1.8rem; margin-top: 1.8rem; }
-  h2 { font-size: 1.5rem; margin-top: 1.6rem; }
-  h3 { font-size: 1.35rem; margin-top: 1.4rem; }
-  h4 { font-size: 1.25rem; margin-top: 1.2rem; }
+  h1 { font-size: var(--article-h1-size); margin-top: 1.8rem; }
+  h2 { font-size: var(--article-h2-size); margin-top: 1.6rem; }
+  h3 { font-size: var(--article-h3-size); margin-top: 1.4rem; }
+  h4 { font-size: var(--article-h4-size); margin-top: 1.2rem; }
 
   /* 增大段落及块级元素间距 */
   p, ul, ol, dl, blockquote {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: var(--article-margin);
+    margin-bottom: var(--article-margin);
   }
 
   /* 列表项保持较小的间距 */
   li {
-    margin-top: 0.3rem;
-    margin-bottom: 0.3rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
