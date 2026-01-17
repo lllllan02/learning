@@ -1,9 +1,9 @@
 ---
 title: Example Title
-draft: true
 tags:
-aliases:
-cssclasses:
 date:
 order:
+draft: true
+aliases:
+cssclasses:
 ---
