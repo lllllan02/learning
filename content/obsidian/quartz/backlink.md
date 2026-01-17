@@ -13,6 +13,7 @@ order: 3
 
 1.  **精准跳转**：点击反向链接时能直接定位到源文档中**具体引用当前页面**的位置。
 2.  **上下文预览**：在鼠标悬停时利用 Popover 机制自动预览引用位置的上下文。
+3.  **外部链接优化**：支持配置外部链接在**新标签页**中打开，并自动添加 `rel="noopener"` 以增强安全性。
 
 ## 遗留问题
 
@@ -35,7 +36,11 @@ order: 3
 ### 启用插件
 
 #### 1. 配置转换插件 (quartz.config.ts)
-将原生的 `Plugin.CrawlLinks` 替换为自定义的 `Custom.CrawlLinks`：
+将原生的 `Plugin.CrawlLinks` 替换为自定义的 `Custom.CrawlLinks`。
+
+**常用配置项：**
+- `markdownLinkResolution`: 链接解析策略（如 "shortest"）。
+- `openLinksInNewTab`: 设置为 `true` 可使外部链接在新标签页打开（已默认增强 `rel="noopener"` 安全属性）。
 
 ```typescript
 import * as Custom from "./quartz/custom"
@@ -43,7 +48,10 @@ import * as Custom from "./quartz/custom"
 // ...
 transformers: [
   // ... 其他插件
-  Custom.CrawlLinks({ markdownLinkResolution: "shortest" }),
+  Custom.CrawlLinks({ 
+    markdownLinkResolution: "shortest", 
+    openLinksInNewTab: true 
+  }),
 ],
 ```
 

@@ -72,14 +72,16 @@ const config: QuartzConfig = {
       Custom.CodeFold(), // 代码块折叠
       Custom.Highlight(), // 高亮
       Custom.Callout(), // 自定义标注
-      Plugin.ObsidianFlavoredMarkdown({ 
+      Plugin.ObsidianFlavoredMarkdown({
         enableInHtmlEmbed: false,  // 禁用 HTML 嵌入
         highlight: false, // 禁用高亮
-       }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
+      }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
       Plugin.GitHubFlavoredMarkdown(), // 支持 GitHub 风格的 Markdown 语法
       Custom.Pangu(), // 中英文自动加空格
       Plugin.TableOfContents(), // 解析并生成目录数据
-      Custom.CrawlLinks({ markdownLinkResolution: "shortest" }), // 解析链接，支持 Obsidian 短链接格式
+      Custom.CrawlLinks({
+        openLinksInNewTab: true, // 是否在新标签页中打开外部链接
+      }),
       Plugin.Description(), // 自动生成页面描述（用于 SEO 和预览）
       Plugin.Latex({ renderEngine: "katex" }), // 支持数学公式 (KaTeX)
     ],

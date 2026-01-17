@@ -95,6 +95,7 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
 
                 if (isExternal && opts.openLinksInNewTab) {
                   node.properties.target = "_blank"
+                  node.properties.rel = "noopener"
                 }
 
                 const isInternal = !(
