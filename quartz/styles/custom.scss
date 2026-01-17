@@ -36,6 +36,51 @@ img {
   margin: 0 auto;
 }
 
+// 图片并排显示容器
+.image-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  align-items: flex-start;
+
+  @media all and (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  // 统一处理直接子元素（可能是 p, a 或 img）
+  & > * {
+    margin: 0 !important;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    max-width: calc(50% - 0.5rem);
+
+    @media all and (max-width: 600px) {
+      max-width: 100%;
+      width: 100%;
+    }
+    
+    // 如果子元素里还有 p（由于 markdown 渲染嵌套）
+    p {
+      margin: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  img {
+    display: block;
+    margin: 0 !important;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+}
+
 // 使 Mermaid 图表居中
 pre:has(> code.mermaid) {
   display: flex;
