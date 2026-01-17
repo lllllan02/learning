@@ -76,5 +76,35 @@ article {
   li {
     margin: 0.3rem 0;
   }
+
+  // 加粗字体对比度优化
+  strong {
+    font-weight: 700;
+    color: var(--dark);
+    text-shadow: 0.2px 0 currentColor; // 模拟更粗的效果
+    padding: 0 1px;
+  }
+
+  // 马克笔效果（用于下划线语法）
+  u {
+    text-decoration: none; // 移除默认下划线
+    background: linear-gradient(transparent 65%, var(--textHighlight) 65%);
+    padding: 0 1px;
+  }
 }
 ```
+
+## 加粗与下划线优化
+
+为了提升阅读体验，在 `quartz/styles/custom.scss` 中对字体样式进行了如下优化：
+
+### 加粗字体 (Strong)
+由于“霞鹜文楷”字体的粗体视觉差异较小：
+1. **增加字重**：显式设置 `font-weight: 700`。
+2. **模拟厚度**：通过 `text-shadow` 增加视觉厚度。
+3. **颜色强化**：使用更深的 `var(--dark)`。
+
+### 下划线/马克笔 (Underline)
+将原本的“马克笔”高亮效果移植到了下划线语法 (`<u>` 标签) 上：
+1. <u>移除默认线条</u>：去掉原生的细下划线。
+2. <u>马克笔高亮</u>：添加占比约 35% 的**青蓝色**底色（Cyan），形成类似荧光笔标注的效果。使用青蓝色是为了与 `==黄色高亮==` 语法进行视觉区分。

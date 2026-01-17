@@ -32,6 +32,22 @@ article {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
   }
+
+  // 增强加粗字体对比度
+  strong {
+    font-weight: 700;
+    color: var(--dark);
+    text-shadow: 0.2px 0 currentColor; // 模拟更粗的效果
+    padding: 0 1px;
+  }
+
+  // 马克笔效果（用于下划线语法）
+  u {
+    text-decoration: none; // 移除默认下划线
+    // 使用青蓝色 (Cyan) 马克笔，以区分默认的黄色高亮 (==)
+    background: linear-gradient(transparent 65%, color-mix(in srgb, #00bcd4 40%, transparent) 65%);
+    padding: 0 1px;
+  }
 }
 
 // 使图片居中显示
