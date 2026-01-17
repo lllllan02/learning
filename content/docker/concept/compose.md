@@ -45,5 +45,4 @@ volumes:
   todo-mysql-data:
 ```
 
-:::[!info] 搞清楚[[docker/concept/compose_and_dockerfile|Docker Compose 和 Dockerfile]]
-:::
+下一步，搞清楚[[docker/concept/compose_and_dockerfile|Docker Compose 和 Dockerfile]]
