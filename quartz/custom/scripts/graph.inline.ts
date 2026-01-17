@@ -24,6 +24,7 @@ type GraphicsInfo = {
   color: string
   gfx: Graphics
   alpha: number
+  width: number
   active: boolean
 }
 
@@ -88,6 +89,22 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     focusOnHover,
     enableRadial,
   } = JSON.parse(graph.dataset["cfg"]!) as D3Config
+
+  const isLocalExpanded = graph.classList.contains("local-graph-container")
+  const isGlobalExpanded = graph.classList.contains("global-graph-container")
+
+  // 如果是展开查看模式，不仅放大视觉缩放(scale)，还要拉开节点间的物理间距(linkDistance/repelForce)
+  if (isLocalExpanded) {
+    scale *= 1.2
+    linkDistance *= 2.2
+    repelForce *= 1.8
+    centerForce *= 0.8
+  } else if (isGlobalExpanded) {
+    scale *= 1.1
+    linkDistance *= 1.6
+    repelForce *= 1.4
+    centerForce *= 0.8
+  }
 
   const i18n = JSON.parse(graph.dataset["i18n"]!) as {
     depth: string
@@ -186,7 +203,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     .force("charge", forceManyBody().strength(-100 * repelForce))
     .force("center", forceCenter().strength(centerForce))
     .force("link", forceLink(graphData.links).distance(linkDistance))
-    .force("collide", forceCollide<NodeData>((n) => nodeRadius(n)).iterations(3))
+    .force("collide", forceCollide<NodeData>((n) => nodeRadius(n) * 4.5).iterations(3))
 
   const radius = (Math.min(width, height) / 2) * 0.8
   if (enableRadial) simulation.force("radial", forceRadial(radius).strength(0.2))
@@ -209,22 +226,23 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     {} as Record<(typeof cssVars)[number], string>,
   )
 
-  const color = (d: NodeData) => {
+  function color(d: NodeData) {
     const isCurrent = d.id === slug
     if (isCurrent) {
-      return computedStyleMap["--secondary"]
-    } else if (visited.has(d.id) || d.id.startsWith("tags/")) {
+      return computedStyleMap["--dark"]
+    } else if (visited.has(d.id)) {
       return computedStyleMap["--tertiary"]
     } else {
-      return computedStyleMap["--gray"]
+      return computedStyleMap["--darkgray"]
     }
   }
 
   function nodeRadius(d: NodeData) {
+    const isCurrent = d.id === slug
     const numLinks = graphData.links.filter(
       (l) => l.source.id === d.id || l.target.id === d.id,
     ).length
-    return 6 + Math.sqrt(numLinks)
+    return (isCurrent ? 4 : 2) + Math.sqrt(numLinks)
   }
 
   let hoveredNodeId: string | null = null
@@ -269,13 +287,15 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const tweenGroup = new TweenGroup()
 
     for (const l of linkRenderData) {
-      let alpha = 1
+      let alpha = 0.8
+      let width = 0.5
       if (hoveredNodeId) {
         alpha = l.active ? 1 : 0.2
+        width = l.active ? 1.5 : 0.3
       }
 
-      l.color = l.active ? computedStyleMap["--gray"] : computedStyleMap["--lightgray"]
-      tweenGroup.add(new Tweened<LinkRenderData>(l).to({ alpha }, 200))
+      l.color = computedStyleMap["--gray"]
+      tweenGroup.add(new Tweened<LinkRenderData>(l).to({ alpha, width }, 200))
     }
 
     tweenGroup.getAll().forEach((tw) => tw.start())
@@ -378,7 +398,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   stage.interactive = false
 
   let controls = graph.parentElement?.querySelector(".graph-controls") as HTMLElement
-  const isLocalExpanded = graph.classList.contains("local-graph-container")
 
   if (!controls) {
     controls = document.createElement("div")
@@ -489,15 +508,17 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   for (const n of graphData.nodes) {
     const nodeId = n.id
+    const isCurrent = nodeId === slug
 
     const label = new Text({
       interactive: false,
       eventMode: "none",
       text: n.text,
       alpha: 1,
-      anchor: { x: 0.5, y: 2.2 },
+      anchor: { x: 0.5, y: -1.2 },
       style: {
-        fontSize: fontSize * 15,
+        fontSize: fontSize * (isCurrent ? 20 : 18),
+        fontWeight: isCurrent ? "bold" : "normal",
         fill: computedStyleMap["--dark"],
         fontFamily: computedStyleMap["--bodyFont"],
       },
@@ -544,6 +565,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       label,
       color: color(n),
       alpha: 1,
+      width: nodeRadius(n),
       active: false,
     }
 
@@ -557,8 +579,9 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     const linkRenderDatum: LinkRenderData = {
       simulationData: l,
       gfx,
-      color: computedStyleMap["--lightgray"],
-      alpha: 1,
+      color: computedStyleMap["--gray"],
+      alpha: 0.8,
+      width: 0.5,
       active: false,
     }
 
@@ -612,28 +635,35 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   if (enableZoom) {
-    select<HTMLCanvasElement, NodeData>(app.canvas).call(
-      zoom<HTMLCanvasElement, NodeData>()
-        .extent([
-          [0, 0],
-          [width, height],
-        ])
-        .scaleExtent([0.25, 4])
-        .on("zoom", ({ transform }) => {
-          currentTransform = transform
-          stage.scale.set(transform.k, transform.k)
-          stage.position.set(transform.x, transform.y)
+    const zoomInstance = zoom<HTMLCanvasElement, NodeData>()
+      .extent([
+        [0, 0],
+        [width, height],
+      ])
+      .scaleExtent([0.1, 10])
+      .on("zoom", ({ transform }) => {
+        currentTransform = transform
+        stage.scale.set(transform.k, transform.k)
+        stage.position.set(transform.x, transform.y)
 
-          const scale = transform.k * opacityScale
-          let scaleOpacity = Math.max(scale - 1, 0)
-          const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
+        const scaleValue = transform.k * opacityScale
+        let scaleOpacity = Math.max(scaleValue - 1, 0)
+        const activeNodes = nodeRenderData.filter((n) => n.active).flatMap((n) => n.label)
 
-          for (const label of labelsContainer.children) {
-            if (!activeNodes.includes(label)) {
-              label.alpha = scaleOpacity
-            }
+        for (const label of labelsContainer.children) {
+          if (!activeNodes.includes(label)) {
+            label.alpha = scaleOpacity
           }
-        }),
+        }
+      })
+
+    const canvas = select<HTMLCanvasElement, NodeData>(app.canvas).call(zoomInstance)
+
+    // 初始缩放和居中
+    const initialScale = scale || 1
+    canvas.call(
+      zoomInstance.transform,
+      zoomIdentity.translate(width / 2, height / 2).scale(initialScale).translate(-width / 2, -height / 2),
     )
   }
 
@@ -655,7 +685,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       l.gfx.moveTo(linkData.source.x! + width / 2, linkData.source.y! + height / 2)
       l.gfx
         .lineTo(linkData.target.x! + width / 2, linkData.target.y! + height / 2)
-        .stroke({ alpha: l.alpha, width: 1, color: l.color })
+        .stroke({ alpha: l.alpha, width: l.width, color: l.color })
     }
 
     tweens.forEach((t) => t.update(time))
@@ -664,6 +694,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   requestAnimationFrame(animate)
+  renderPixiFromD3()
   return {
     hasMore,
     cleanup: () => {
