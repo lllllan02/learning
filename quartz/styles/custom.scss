@@ -140,3 +140,13 @@ body[data-slug="index"] {
     table-layout: auto; // 默认根据内容调整列宽，如需均匀分布可改为 fixed
   }
 }
+
+// 右侧目录文字超过宽度显示省略号
+.toc ul {
+  & > li > a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

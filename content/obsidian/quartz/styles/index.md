@@ -28,3 +28,7 @@ order: 2
 ## [[/obsidian/quartz/styles/tables|表格自动最大宽度]]
 
 配置了表格自动撑满容器宽度的样式，解决了默认样式下表格宽度受限的问题。
+
+## [[/obsidian/quartz/styles/sidebar-overflow|右侧目录文本截断]]
+
+实现了右侧目录长标题自动截断，避免因文字过长导致的排版混乱。

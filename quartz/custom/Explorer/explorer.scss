@@ -28,3 +28,39 @@
     }
   }
 }
+
+.explorer-content {
+  & ul li {
+    & > a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+  }
+
+  .folder-container {
+    min-width: 0;
+
+    & > div {
+      min-width: 0;
+      flex: 1;
+
+      & > a,
+      & > button {
+        width: 100%;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        & > span {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}

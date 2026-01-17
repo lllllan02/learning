@@ -3,6 +3,7 @@ title: 表格自动最大宽度
 tags:
   - Obsidian
   - Quartz
+  - 表格
 date: 2026-01-17
 ---
 
