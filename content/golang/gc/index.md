@@ -1,5 +1,5 @@
 ---
-title: 关于 Golang GC 的阅读推荐
+title: Golang GC
 tags:
     - Golang
     - GC
