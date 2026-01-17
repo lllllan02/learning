@@ -32,7 +32,7 @@ const defaultOptions: GraphOptions = {
     zoom: true, // 是否允许通过滚轮缩放图谱
     depth: 1, // 局部图谱显示的层级深度（展示几级关联节点）
     scale: 1.25, // 初始缩放比例
-    repelForce: 2.2, // 节点间的排斥力强度，值越大节点越分散
+    repelForce: 5, // 节点间的排斥力强度，值越大节点越分散
     centerForce: 1, // 向心力强度，值越大节点越向中心聚集
     linkDistance: 30, // 节点间连线的理想距离
     fontSize: 0.6, // 节点标签的字体大小
@@ -47,7 +47,7 @@ const defaultOptions: GraphOptions = {
     zoom: true,
     depth: -1,
     scale: 1.0,
-    repelForce: 3.0,
+    repelForce: 5,
     centerForce: 1,
     linkDistance: 30,
     fontSize: 0.5,
