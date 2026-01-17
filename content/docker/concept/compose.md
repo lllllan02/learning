@@ -2,7 +2,7 @@
 title: Docker Compose
 tags:
   - Docker
-  - Compose
+  - Docker Compose
 date: 2026-01-16
 order: 4
 ---
@@ -45,4 +45,5 @@ volumes:
   todo-mysql-data:
 ```
 
-疑问：Docker Compose 和 Dockerfile 的区别是什么？
+:::[!info] 搞清楚[[docker/concept/compose_and_dockerfile|Docker Compose 和 Dockerfile]]
+:::
