@@ -42,7 +42,7 @@ export const Callout: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => 
       // 1. 优先跳过代码块
       // 2. 调整结束标记匹配顺序：优先匹配紧随标题行的结束符 (?:[\n\r]\1)
       // 3. 这样可以防止正则表达式错误地吞噬后续内容
-      const combinedRegex = /```[\s\S]*?```|^(:{3,})[\t ]*\[!([^\s|\]\[+-]+)(?:\|([^\]\n+-]*))?\]([+-])?[\t ]*(.*?)(?:[\n\r]\1|[\n\r]([\s\S]*?)[\n\r]\1)(?:\s|$)/gm
+      const combinedRegex = /```[\s\S]*?```|^(:{3,})[\t ]*\[!([^\s|\]\[]+)(?:\|([^\]\n]*))?\]([+-])?[\t ]*(.*?)(?:[\n\r]\1|[\n\r]([\s\S]*?)[\n\r]\1)(?:\s|$)/gm
       
       const parseCallouts = (content: string): string => {
         return content.replace(combinedRegex, (match, _colons, type, metadata, collapse, title, body) => {
@@ -118,9 +118,10 @@ export const Callout: QuartzTransformerPlugin<Partial<Options>> = (userOpts) => 
           if (isCollapsible) classNames.push("is-collapsible")
           if (isCollapsed) classNames.push("is-collapsed")
           
-          const styleAttr = customColor ? `style="--color: ${customColor}; --callout-color: ${customColor}; --border: ${customColor}44; --bg: ${customColor}15; --callout-border: ${customColor}44; --callout-bg: ${customColor}15;"` : ""
+          const escapeHash = (str: string) => str.replace(/#/g, "&#x23;")
+          const styleAttr = customColor ? `style="--color: ${escapeHash(customColor)}; --callout-color: ${escapeHash(customColor)}; --border: ${escapeHash(customColor)}44; --bg: ${escapeHash(customColor)}15; --callout-border: ${escapeHash(customColor)}44; --callout-bg: ${escapeHash(customColor)}15;"` : ""
           const iconBg = customColor ? `background-color: var(--callout-color);` : ""
-          const iconAttr = customIcon ? `style="mask-image: url('${customIcon}'); -webkit-mask-image: url('${customIcon}'); ${iconBg}"` : ""
+          const iconAttr = customIcon ? `style="mask-image: url('${escapeHash(customIcon)}'); -webkit-mask-image: url('${escapeHash(customIcon)}'); ${iconBg}"` : ""
 
           // 递归处理内容
           const processedBody = body ? parseCallouts(body.trim()) : ""
