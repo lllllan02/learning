@@ -19,8 +19,8 @@ Docker 镜像是由一系列只读层组成的，每一层都代表了 Dockerfil
 
 <div class="image-row">
 
-![[layer-20260117101335.png]]
-![[layer-20260117101235.png]]
+![[assets/layer-20260117101335.png]]
+![[assets/layer-20260117101235.png]]
 
 </div>
 

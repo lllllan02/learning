@@ -73,7 +73,7 @@ const config: QuartzConfig = {
       Custom.Highlight(), // 高亮
       Custom.Callout(), // 自定义标注
       Plugin.ObsidianFlavoredMarkdown({
-        enableInHtmlEmbed: false,  // 禁用 HTML 嵌入
+        enableInHtmlEmbed: true,  // 启用 HTML 嵌入
         highlight: false, // 禁用高亮
       }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
       Plugin.GitHubFlavoredMarkdown(), // 支持 GitHub 风格的 Markdown 语法
