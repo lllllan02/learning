@@ -1,0 +1,130 @@
+.recent-todo {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--lightgray);
+
+  & > h3 {
+    margin: 0.5rem 0 0 0;
+    font-size: 1rem;
+    color: var(--dark);
+  }
+
+  .recent-li {
+    input[type="checkbox"] {
+      margin: 0 0.5rem 0 0;
+      vertical-align: middle;
+      cursor: default;
+      position: static;
+    }
+
+    span {
+      vertical-align: middle;
+    }
+
+    .todo-link-ref {
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        inset: -15px -10px;
+        z-index: -1;
+      }
+    }
+  }
+}
+
+.todo-page {
+  .todo-page-content {
+    margin-bottom: 2rem;
+  }
+
+  .todo-divider {
+    margin: 4rem 0 2rem 0;
+    text-align: center;
+    position: relative;
+
+    hr {
+      border: none;
+      border-top: 2px dashed var(--lightgray);
+      margin-bottom: 2rem;
+      opacity: 0.3;
+    }
+
+    h2 {
+      display: inline-block;
+      background: var(--light);
+      padding: 0 1rem;
+      font-size: 1.2rem;
+      color: var(--gray);
+      margin: 0;
+    }
+  }
+
+  .todo-list {
+    list-style: none;
+    padding-left: 0;
+
+    .todo-item {
+      margin: 1rem 0;
+      padding: 0.8rem;
+      background: var(--highlight);
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: translateX(5px);
+      }
+
+      &.checked {
+        opacity: 0.6;
+        .todo-text {
+          text-decoration: line-through;
+        }
+      }
+
+      .todo-item-content {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        input[type="checkbox"] {
+          margin: 0;
+          flex-shrink: 0;
+        }
+
+        .todo-text {
+          flex-grow: 1;
+          font-weight: 500;
+          color: var(--darkgray);
+        }
+
+        .todo-source {
+          font-size: 0.85rem;
+          color: var(--gray);
+          white-space: nowrap;
+
+          a {
+            color: var(--secondary);
+            font-weight: normal;
+            background: none;
+            padding: 0;
+            position: relative;
+            
+            &:hover {
+              text-decoration: underline;
+            }
+
+            // 增加一个透明的扩大区域，作为鼠标移动到预览窗的“桥梁”
+            &::before {
+              content: "";
+              position: absolute;
+              inset: -15px -10px;
+              z-index: -1;
+            }
+          }
+        }
+      }
+    }
+  }
+}

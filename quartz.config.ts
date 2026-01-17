@@ -78,6 +78,7 @@ const config: QuartzConfig = {
       }), // 支持 Obsidian 特有的 Markdown 语法（双链、标注等）
       Plugin.GitHubFlavoredMarkdown(), // 支持 GitHub 风格的 Markdown 语法
       Custom.Pangu(), // 中英文自动加空格
+      Custom.TodoTransformer(), // 收集 TODO 事项
       Plugin.TableOfContents(), // 解析并生成目录数据
       Custom.CrawlLinks({
         openLinksInNewTab: true, // 是否在新标签页中打开外部链接
@@ -93,7 +94,7 @@ const config: QuartzConfig = {
       // 发射器插件：决定如何输出最终生成的页面和资源
       Plugin.AliasRedirects(), // 处理 frontmatter 中的 aliases 重定向
       Plugin.ComponentResources(), // 打包并输出组件所需的 JS 和 CSS 资源
-      Plugin.ContentPage(), // 生成正文内容页面
+      Custom.CustomContentPage(), // 使用自定义的内容页面发射器（跳过 todo 路径）
       Plugin.FolderPage({
         pageBody: Component.Content(),
       }), // 生成文件夹索引页面
@@ -106,6 +107,7 @@ const config: QuartzConfig = {
       Plugin.Static(), // 处理 static 文件夹中的静态文件
       Plugin.Favicon(), // 处理网站图标
       Plugin.NotFoundPage(), // 生成 404 错误页面
+      Custom.TodoEmitter(), // 生成 TODO 汇总页
       // Plugin.CustomOgImages(), // 生成自定义 OG 图片（社交分享预览图），默认开启会增加构建时间
       Plugin.CustomOgImages(),
     ],

@@ -17,6 +17,13 @@ export const sharedPageComponents: SharedLayout = {
       }),
       condition: (page) => page.fileData.slug === "index",
     }),
+    Component.ConditionalRender({
+      component: Custom.RecentTodo({
+        title: "最新待办",
+        limit: 1,
+      }),
+      condition: (page) => page.fileData.slug === "index",
+    }),
   ], // 正文内容下方的组件
   footer: Component.Footer({
     links: {
