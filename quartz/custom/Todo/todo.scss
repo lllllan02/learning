@@ -50,21 +50,57 @@
       opacity: 0.3;
     }
 
-    h2 {
-      display: inline-block;
-      background: var(--light);
+    .todo-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
       padding: 0 1rem;
-      font-size: 1.2rem;
-      color: var(--gray);
-      margin: 0;
+
+      h2 {
+        background: var(--light);
+        padding: 0 1rem;
+        font-size: 1.2rem;
+        color: var(--gray);
+        margin: 0;
+      }
+
+      .todo-controls {
+        display: flex;
+        gap: 1.2rem;
+
+        .sort-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          font-size: 0.95rem;
+          font-weight: bold;
+          cursor: pointer;
+          color: var(--gray);
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: var(--secondary);
+          }
+
+          &.active {
+            color: var(--secondary);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+          }
+        }
+      }
     }
   }
 
   .todo-list {
     list-style: none;
     padding-left: 0;
+    min-height: 200px; // 防止翻页时高度剧烈变动
 
     .todo-item {
+      display: flex; // 初始为 flex，JS 会根据分页修改
       margin: 1rem 0;
       padding: 0.8rem;
       background: var(--highlight);
@@ -85,8 +121,8 @@
       .todo-item-content {
         display: flex;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 0.5rem;
+        width: 100%;
+        gap: 0.8rem;
 
         input[type="checkbox"] {
           margin: 0;
@@ -94,46 +130,87 @@
         }
 
         .todo-text {
+          flex-grow: 1;
           font-weight: 500;
           color: var(--darkgray);
           line-height: 1.5;
-        }
-
-        .todo-metadata {
-          margin-left: auto;
           display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: 0.8rem;
-          font-weight: normal;
-          font-size: 0.8rem;
-          color: var(--gray);
-          white-space: nowrap;
+          flex-wrap: wrap;
+          width: 100%;
 
-          & > span + span::before {
-            content: "|";
-            margin-right: 0.8rem;
-            opacity: 0.3;
-          }
+          .todo-metadata {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: normal;
+            font-size: 0.8rem;
+            color: var(--gray);
+            white-space: nowrap;
+            margin-left: auto;
 
-          .todo-priority {
-            font-weight: bold;
-            &.priority-1 { color: #ff4d4f; }
-            &.priority-2 { color: #faad14; }
-            &.priority-3 { color: #52c41a; }
-            &.priority-4 { color: #1890ff; }
-          }
+            & > span + span::before {
+              content: "|";
+              margin-right: 0.8rem;
+              opacity: 0.3;
+            }
 
-          .todo-source a {
-            color: var(--secondary);
-            background: none;
-            padding: 0;
-            
-            &:hover {
-              text-decoration: underline;
+            .todo-priority {
+              font-weight: bold;
+              &.priority-1 { color: #ff4d4f; }
+              &.priority-2 { color: #faad14; }
+              &.priority-3 { color: #52c41a; }
+              &.priority-4 { color: #1890ff; }
+            }
+
+            .todo-source a {
+              color: var(--secondary);
+              background: none;
+              padding: 0;
+              
+              &:hover {
+                text-decoration: underline;
+              }
             }
           }
         }
       }
+    }
+  }
+
+  .todo-pagination {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    padding-bottom: 2rem;
+
+    .pag-btn {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 1rem;
+      cursor: pointer;
+      color: var(--secondary);
+      transition: all 0.2s ease;
+      font-weight: bold;
+
+      &:hover:not([disabled]) {
+        text-decoration: underline;
+      }
+
+      &[disabled] {
+        color: var(--lightgray);
+        cursor: not-allowed;
+      }
+    }
+
+    .pag-info {
+      font-size: 0.85rem;
+      color: var(--gray);
+      font-family: var(--codeFont);
     }
   }
 }
