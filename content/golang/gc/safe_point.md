@@ -1,5 +1,5 @@
 ---
-title: 安全点
+title: 安全点 Safe Point
 tags:
     - Golang
     - GC
