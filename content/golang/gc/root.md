@@ -5,7 +5,7 @@ tags:
     - GC
     - GC Roots
 date: 2026-01-18
-order: 98
+order: 102
 ---
 
 这句话描述的是垃圾回收（Garbage Collection, GC）中一个非常核心的概念：**GC Roots（垃圾回收根节点）**。
