@@ -94,33 +94,42 @@
         }
 
         .todo-text {
-          flex-grow: 1;
           font-weight: 500;
           color: var(--darkgray);
+          line-height: 1.5;
         }
 
-        .todo-source {
-          font-size: 0.85rem;
+        .todo-metadata {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          font-weight: normal;
+          font-size: 0.8rem;
           color: var(--gray);
           white-space: nowrap;
 
-          a {
+          & > span + span::before {
+            content: "|";
+            margin-right: 0.8rem;
+            opacity: 0.3;
+          }
+
+          .todo-priority {
+            font-weight: bold;
+            &.priority-1 { color: #ff4d4f; }
+            &.priority-2 { color: #faad14; }
+            &.priority-3 { color: #52c41a; }
+            &.priority-4 { color: #1890ff; }
+          }
+
+          .todo-source a {
             color: var(--secondary);
-            font-weight: normal;
             background: none;
             padding: 0;
-            position: relative;
             
             &:hover {
               text-decoration: underline;
-            }
-
-            // 增加一个透明的扩大区域，作为鼠标移动到预览窗的“桥梁”
-            &::before {
-              content: "";
-              position: absolute;
-              inset: -15px -10px;
-              z-index: -1;
             }
           }
         }
